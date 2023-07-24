@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 
 const User = require('./models/User');
+const Post = require('./models/Post');
+
 const app = express();
 
 app.use(session({
@@ -15,8 +17,10 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const dbURI =  'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
-mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
+app.set('view engine', 'ejs');
+
+const dbURI = 'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
 
@@ -57,9 +61,9 @@ app.get('/single-user', (req, res) => {
 });
 
 // Login route
-  app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/views/login.html');
-  });
+app.get('/login', (req, res) => {
+  res.sendFile(__dirname + '/views/login.html');
+});
 
 
 // Route for handling user login
@@ -128,4 +132,25 @@ app.get('/profile', (req, res) => {
     // User is not authenticated, redirect them to the login page
     res.redirect('/login');
   }
+});
+
+// Route for rendering the posts page for a specific user
+app.get('/user/:userId/posts', (req, res) => {
+  const userId = req.params.userId;
+  // Find the user by their ID and populate the 'posts' field
+  User.findById(userId)
+    .populate('posts') // Assuming 'posts' is the field that contains the user's posts
+    .then((user) => {
+      if (user) {
+        // User found, render the posts page with the user's information
+        res.render('posts', { user: user });
+      } else {
+        // User not found
+        res.status(404).send('User not found');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Server error');
+    });
 });
