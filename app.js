@@ -5,10 +5,16 @@ const User = require('./models/User');
 
 const app = express();
 
-const dbURI =  'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/?retryWrites=true&w=majority';
+const dbURI =  'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
+
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/login', (req, res) => {
+  res.sendFile(__dirname + '/views/login.html');
+});
 
 // get
 app.get('/add-user', (req, res) => {
@@ -24,109 +30,77 @@ app.get('/add-user', (req, res) => {
     .catch((err) => {
       console.log(err)
     })
-})
+});
 
+app.get('/all-users', (req, res) => {
+  User.find()
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+});
 
-// const express = require('express')
-// const {ObjectId} = require('mongodb')
-// const {connectToDb, getDb} = require('./db')
+app.get('/single-user', (req, res) => {
+  User.findById('64bd68ad50a4458e8d362963')
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+});
 
-// // init app & middleware
-// const app = express()
-// app.use(express.json())
+// Route for handling user login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  // Validate the user against the database
+  User.findOne({ username: username, password: password })
+    .then((user) => {
+      if (user) {
+        // User is found, handle successful login here (e.g., redirect to their profile page)
+        res.redirect('/profile');
+      } else {
+        // User is not found or password is incorrect, handle login failure
+        res.send('Invalid username or password');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Server error');
+    });
+});
 
-// // db connection
-// let db
-
-// connectToDb((err) => {
-//      if (!err) {
-//         app.listen(3000, () => {
-//             console.log('app listening on port 3000')
-//         })
-//         db = getDb()
-//      }
-// })
-
-
-// // routes
-// app.get('/users', (req, res) => {
-
-//     const page = req.query.p || 0
-//     const usersPerPage = 1
-
-//     let users = []
-
-//     db.collection('users')
-//       .find()
-//       .sort({username: 1})
-//       .forEach(user => users.push(user))
-//       .then(() => {
-//         res.status(200).json(users)
-//       })
-//       .catch(() => {
-//         res.status(500).json({error: 'Could not fetch the documents'})
-//       })
-// })
-
-// app.get('/users/:id', (req, res) => {
-
-//     if (ObjectId.isValid(req.params.id)) {
-//         db.collection('users')
-//         .findOne({_id: new ObjectId(req.params.id)})
-//         .then(doc => {
-//           res.status(200).json(doc)
-//         })
-//         .catch(err => {
-//           res.status(500).json({error: 'Could not fetch the document'})
-//         })
-//     } else {
-//         res.status(500).json({error: 'Not a valid doc id'})
-//     }
-// })
-
-// app.post('/users', (req, res) => {
-//     const user = req.body
-
-//     db.collection('users')
-//       .insertOne(user)
-//       .then(result => {
-//         res.status(201).json(result)
-//       })
-//       .catch(err => {
-//         response.status(500).json({err: 'Could not create a new document'})
-//       })
-// })
-
-
-// app.delete('/users/:id', (req, res) => {
-
-//     if (ObjectId.isValid(req.params.id)) {
-//       db.collection('users')
-//       .deleteOne({_id: new ObjectId(req.params.id)})
-//       .then(result => {
-//         res.status(200).json(result)
-//       })
-//       .catch(err => {
-//         res.status(500).json({error: 'Could not delete the document'})
-//       })
-//     } else {
-//         res.status(500).json({error: 'Not a valid doc id'})
-//     }
-// })
-
-// app.patch('/users/:id', (req, res) => {
-//   const updates = req.body
-
-//   if (ObjectId.isValid(req.params.id)) {
-//     db.collection('users')
-//     .updateOne({_id: new ObjectId(req.params.id)}, {$set: updates})
-//     .then(result => {
-//       res.status(200).json(result)
-//     })
-//     .catch(err => {
-//       res.status(500).json({error: 'Could not update the document'})
-//     })
-//   } else {
-//       res.status(500).json({error: 'Not a valid doc id'})
-//   }
-// })
+// Route for handling user registration
+app.post('/register', (req, res) => {
+  console.log(req.body);
+  const { username, password } = req.body;
+  // Check if the username already exists in the database
+  User.findOne({ username: username })
+    .then((existingUser) => {
+      if (existingUser) {
+        // Username already exists, handle registration failure
+        res.send('Username already exists. Please choose a different username.');
+      } else {
+        // Create a new user and save it to the database
+        const newUser = new User({
+          username: username,
+          password: password
+        });
+        newUser.save()
+          .then((result) => {
+            // User is successfully registered, handle successful registration (e.g., redirect to login page)
+            res.redirect('/login');
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).send('Server error');
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Server error');
+    });
+});

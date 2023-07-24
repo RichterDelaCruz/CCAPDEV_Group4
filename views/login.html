@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Login and Registration Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <script src="../app.js"></script>
+
+  <div class="logo">
+    <img src="Images/logo.png" alt="Logo">
+    <span class="site-name">Homebuddies</span>
+  </div>
+
+  <div class="container login-container">
+    <div class="forms">
+      <div class="form-content">
+        <div class="login-form">
+          <div class="title">Sign in to Homebuddies</div>
+          <form action="/login" method="post"> <!-- Updated form action and method -->
+            <div class="input-boxes">
+              <div class="input-box">
+                <input type="text" placeholder="Username" name="username" required> <!-- Added name attribute for form submission -->
+              </div>
+              <div class="input-box">
+                <input type="password" placeholder="Password" name="password" required> <!-- Added name attribute for form submission -->
+              </div>
+              <div class="button">
+                <input type="submit" value="Log In">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container signup-container">
+    <div class="forms">
+      <div class="form-content">
+        <div class="signup-form">
+          <div class="title">Sign Up to Homebuddies</div>
+          <form action="/register" method="post"> <!-- Updated form action and method -->
+            <div class="input-boxes">
+              <div class="input-box">
+                <input type="text" placeholder="Username" name="username" required> <!-- Added name attribute for form submission -->
+              </div>
+              <div class="input-box">
+                <input type="password" placeholder="Password" name="password" required> <!-- Added name attribute for form submission -->
+              </div>
+              <div class="button">
+                <input type="submit" value="Sign Up">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
