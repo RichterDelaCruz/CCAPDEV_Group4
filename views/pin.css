@@ -1,0 +1,97 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.pin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.post .pin-post-pic img{
+    background-size: cover;
+    object-fit: cover;
+    width: 380px;
+    height: 440px;
+    margin-right: 10px;
+}
+
+.pin-container .middle-container {
+    width: 50%;
+}
+
+.pin-container .post {
+    display: flex;
+    flex-direction: row;
+}
+
+.pin-title {
+    font-weight: bold;
+    font-size: medium;
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
+
+.pin-post-container-right {
+    width: 50%;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    flex-direction: column;
+}
+
+.pin-profile-name {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.pin-profile-name img {
+    max-height: 40px;
+    max-width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    align-items: left;
+    margin-right: 10px;
+}
+
+.pin-profile-name span {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #ffa800;
+}
+
+.pin-profile-name span:hover {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #00b2ff;
+}
+
+.heart {
+    border: 0px;
+    background-color: white;
+    text-align: left;
+    margin: 10px;
+    align-items: center;
+}
+
+.heart i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.heart i:hover{
+    color: red;
+}
+
+.heart span{
+    font-weight: bold;
+    font-size: 16px;
+}
+
