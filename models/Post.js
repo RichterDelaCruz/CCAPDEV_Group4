@@ -3,18 +3,16 @@ const Schema = mongoose.Schema;
 
 // Create a schema for the 'Post' model
 const postSchema = new Schema({
-    post_id: {
-        type: Number,
-        required: true,
-        unique: true
-    },
     user_id: {
-        type: Number,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
-    },
+        },
     content: {
         type: String,
-        required: true
+    },
+    Photo: {
+        type: String
     },
     timestamp: {
         type: Date,
@@ -27,5 +25,4 @@ const postSchema = new Schema({
 
 // Create and export the 'Post' model
 const Post = mongoose.model('Post', postSchema);
-
 module.exports = Post;

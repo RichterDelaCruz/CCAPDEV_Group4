@@ -21,5 +21,17 @@
         <input type="file" name="image">
         <input type="submit">
     </form>
+
+    <!-- Form to create a new post -->
+    <form method="POST" action="/create-post" enctype="multipart/form-data">
+        <label for="content">New Post:</label>
+        <input type="text" name="content" id="content">
+
+        <!-- Add a file input to upload a photo for the post -->
+        <label for="photo">Upload Photo:</label>
+        <input type="file" name="photo" id="photo">
+
+        <input type="submit" value="Create Post">
+    </form>
 </body>
 </html>
