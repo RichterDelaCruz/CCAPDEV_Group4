@@ -1,20 +1,24 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const User = require('./models/User');
+const session = require('express-session');
 
+const User = require('./models/User');
 const app = express();
+
+app.use(session({
+  secret: 'some secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const dbURI =  'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
-
-app.use(express.urlencoded({ extended: true }));
-
-app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/views/login.html');
-});
 
 // get
 app.get('/add-user', (req, res) => {
@@ -52,6 +56,12 @@ app.get('/single-user', (req, res) => {
     })
 });
 
+// Login route
+  app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/views/login.html');
+  });
+
+
 // Route for handling user login
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -59,7 +69,10 @@ app.post('/login', (req, res) => {
   User.findOne({ username: username, password: password })
     .then((user) => {
       if (user) {
-        // User is found, handle successful login here (e.g., redirect to their profile page)
+        // User is found, store user information in the session
+        req.session.user = user;
+        console.log(req.session.user); // Add this line to check session data
+        // Handle successful login here (e.g., redirect to their profile page)
         res.redirect('/profile');
       } else {
         // User is not found or password is incorrect, handle login failure
@@ -74,7 +87,6 @@ app.post('/login', (req, res) => {
 
 // Route for handling user registration
 app.post('/register', (req, res) => {
-  console.log(req.body);
   const { username, password } = req.body;
   // Check if the username already exists in the database
   User.findOne({ username: username })
@@ -103,4 +115,17 @@ app.post('/register', (req, res) => {
       console.log(err);
       res.status(500).send('Server error');
     });
+});
+
+// Route for user profile page
+app.get('/profile', (req, res) => {
+  // Check if the user is authenticated by checking the session
+  if (req.session.user) {
+    // User is authenticated, display the profile page (you can use a template engine like EJS, Pug, etc.)
+    // Here, we're just sending the user data as JSON to demonstrate.
+    res.send(req.session.user);
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
 });
