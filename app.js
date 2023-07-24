@@ -30,6 +30,8 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/images", express.static('images'));
+
 app.set('view engine', 'ejs');
 
 const dbURI = 'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
@@ -43,7 +45,7 @@ app.post("/profile", upload.single("image"), (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     const userId = req.session.user._id;
-    const profilePicturePath = req.file.path; // Assuming 'path' is the field where multer stores the image path
+    const profilePicturePath = "/images/" + req.file.filename; // Assuming 'path' is the field where multer stores the image path
 
     // Update the profilePicture field for the logged-in user in the database
     User.findByIdAndUpdate(userId, { profilePicture: profilePicturePath }, { new: true })

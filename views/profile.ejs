@@ -8,9 +8,18 @@
 <body>
     <h1>Welcome, <%= user.username %>!</h1>
 
-    <form method = "POST" action="/profile" enctype="multipart/form-data">
-        <input type = "file" name = "image">
-        <input type = "submit">
+    <!-- Display the profile picture if it exists -->
+    <% if (user.profilePicture) { %>
+        <img src="<%= user.profilePicture %>" alt="Profile Picture">
+    <% } else { %>
+        <!-- Display a default profile picture if the user has not uploaded a custom picture -->
+        <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
+        <p>No profile picture uploaded.</p>
+    <% } %>
+
+    <form method="POST" action="/profile" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="submit">
     </form>
 </body>
 </html>
