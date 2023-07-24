@@ -28,15 +28,15 @@
                     <a class="close" href="javascript:history.back()"><i class="fa fa-close"></i></a>
 
                     <div class="pin-post-pic" onclick="handleOnClick()">
-                        <img src="<%= postImageUrl %>">
+                        <img src="<%= postImageUrl %>" id="pinImage">
                     </div>
 
-                    <div class="pin-post-container-right">
+                    <div class="pin-post-container-right" id="pinInfoContainer">
                         <span class="pin-title">Pin by:</span>
 
                         <div class="pin-profile-name">
-                            <img src="Images/EmilySmith.png" onclick="EmilySmithProfilePhoto()">
-                            <span><a onclick="EmilySmithProfilePhoto()"><%= profileName %></a></span>
+                            <img src="Images/loading.gif" id="profileImage" alt="Loading...">
+                            <span><a id="profileNameLink"></a></span>
                         </div>
 
                         <button type="button" class="heart">
@@ -48,6 +48,20 @@
             </div>
         </div>
     </div>
+
+    <script src="js/homepage.js"></script>
+    <script>
+        // Fetch pin information from the server
+        fetch('/api/pin') // Replace '/api/pin' with the appropriate API endpoint on the server
+            .then(response => response.json())
+            .then(data => {
+                // Update the pin details in the DOM
+                document.getElementById('pinImage').src = data.postImageUrl;
+                document.getElementById('profileImage').src = data.profileImage; // Assuming the server provides the profile image URL
+                document.getElementById('profileNameLink').textContent = data.profileName;
+            })
+            .catch(error => console.error('Error fetching pin information:', error));
+    </script>
 </body>
 
 </html>
