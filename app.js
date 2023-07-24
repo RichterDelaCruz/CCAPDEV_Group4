@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({storage: storage})
+const upload = multer({storage: storage});
 
 const User = require('./models/User');
 const Post = require('./models/Post');
@@ -30,6 +30,8 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/images", express.static('images'));
+
 app.set('view engine', 'ejs');
 
 const dbURI = 'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
@@ -38,12 +40,11 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch((err) => console.log(err));
 
 // Route for handling profile picture upload
-// Route for handling profile picture upload
 app.post("/profile", upload.single("image"), (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     const userId = req.session.user._id;
-    const profilePicturePath = req.file.path; // Assuming 'path' is the field where multer stores the image path
+    const profilePicturePath = "/images/" + req.file.filename; // Assuming 'path' is the field where multer stores the image path
 
     // Update the profilePicture field for the logged-in user in the database
     User.findByIdAndUpdate(userId, { profilePicture: profilePicturePath }, { new: true })
@@ -52,6 +53,42 @@ app.post("/profile", upload.single("image"), (req, res) => {
         req.session.user = user;
         // Redirect back to the profile page after the update
         res.redirect('/profile');
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Server error');
+      });
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
+});
+
+// Route to handle the form submission for creating a new post
+app.post('/create-post', upload.single('photo'), (req, res) => {
+  if (req.session.user) {
+    // Extract the necessary data from the request
+    const { content } = req.body;
+    const timestamp = new Date();
+    const photoPath = req.file ? `/images/${req.file.filename}` : null;
+    const user_id = req.session.user._id;
+
+    // Assuming the 'user_id' is a valid MongoDB ObjectId
+    const newPost = new Post({
+      user_id: user_id, // Use the user_id from the session
+      content: content,
+      timestamp: timestamp,
+      photo: photoPath,
+      comments: [] // Initially, the comments array is empty for a new post
+    });
+
+    // Save the new post to the database
+    newPost.save()
+      .then((post) => {
+        console.log('New Post:', post); // Check if the new post data is correct
+
+        // ... (rest of the code, e.g., redirecting or rendering a page)
+        res.redirect('/profile'); // Redirecting to the profile page after creating a new post
       })
       .catch((err) => {
         console.log(err);
