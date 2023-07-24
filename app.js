@@ -40,8 +40,47 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
 
+  app.get('/homepage', async (req, res) => {
+    try {
+      if (!req.session.user) {
+        // User is not authenticated, redirect them to the login page
+        return res.redirect('/login');
+      }
+  
+      // Find all posts for the current user
+      const posts = await Post.find({ user_id: req.session.user._id }).exec();
+  
+      // Fetch the username for each post using the 'user_id' in the Post model
+      for (const post of posts) {
+        const user = await User.findById(post.user_id).exec();
+        post.username = user.username; // Add the 'username' field to the post
+      }
+  
+      // Fetch comments for each post and populate the 'user_id' field to access user data
+      for (const post of posts) {
+        const comments = await Comment.find({ post_id: post._id }).exec();
+  
+        // Fetch the username for each comment using the 'user_id' in the Comment model
+        for (const comment of comments) {
+          const user = await User.findById(comment.user_id).exec();
+          comment.username = user.username; // Add the 'username' field to the comment
+        }
+  
+        post.comments = comments;
+      }
+  
+      // Render the profile page with the user object and the posts
+      res.render('homepage', { user: req.session.user, posts: posts });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('Server error');
+    }
+  });
+  
+
+  
 // Route for handling profile picture upload
-app.post("/profile", upload.single("image"), (req, res) => {
+app.post("/homepage", upload.single("image"), (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     const userId = req.session.user._id;
@@ -53,7 +92,7 @@ app.post("/profile", upload.single("image"), (req, res) => {
         // Update the user data in the session with the new data from the database
         req.session.user = user;
         // Redirect back to the profile page after the update
-        res.redirect('/profile');
+        res.redirect('/homepage');
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +104,7 @@ app.post("/profile", upload.single("image"), (req, res) => {
   }
 });
 
-app.get('/profile', async (req, res) => {
+app.get('/homepage', async (req, res) => {
   try {
     if (!req.session.user) {
       // User is not authenticated, redirect them to the login page
@@ -82,7 +121,7 @@ app.get('/profile', async (req, res) => {
     }
 
     // Render the profile page with the user object and the posts
-    res.render('profile', { user: req.session.user, posts: posts });
+    res.render('homepage', { user: req.session.user, posts: posts });
   } catch (err) {
     console.log(err);
     res.status(500).send('Server error');
@@ -112,7 +151,7 @@ app.post('/create-post', upload.single('photo'), (req, res) => {
         console.log('New Post:', post); // Check if the new post data is correct
 
         // ... (rest of the code, e.g., redirecting or rendering a page)
-        res.redirect('/profile'); // Redirecting to the profile page after creating a new post
+        res.redirect('/homepage'); // Redirecting to the profile page after creating a new post
       })
       .catch((err) => {
         console.log(err);
@@ -124,7 +163,7 @@ app.post('/create-post', upload.single('photo'), (req, res) => {
   }
 });
 
-app.get('/profile', (req, res) => {
+app.get('/homepage', (req, res) => {
     // Check if the user is authenticated by checking the session
     if (req.session.user) {
         // User is authenticated, display the profile page with the user object
@@ -132,7 +171,7 @@ app.get('/profile', (req, res) => {
         Post.find({ user_id: req.session.user._id })
             .populate('user_id')
             .then((posts) => {
-                res.render('profile', { user: req.session.user, posts: posts });
+                res.render('homepage', { user: req.session.user, posts: posts });
             })
             .catch((err) => {
                 console.log(err);
@@ -165,7 +204,7 @@ app.post('/add-comment', (req, res) => {
       .then((comment) => {
         console.log('New Comment:', comment);
         // Redirect back to the profile page after posting the comment
-        res.redirect('/profile');
+        res.redirect('/homepage');
       })
       .catch((err) => {
         console.log(err);
@@ -231,7 +270,7 @@ app.post('/login', (req, res) => {
         req.session.user = user;
         console.log(req.session.user); // Add this line to check session data
         // Handle successful login here (e.g., redirect to their profile page)
-        res.redirect('/profile');
+        res.redirect('/homepage');
       } else {
         // User is not found or password is incorrect, handle login failure
         res.send('Invalid username or password');
@@ -276,11 +315,11 @@ app.post('/register', (req, res) => {
 });
 
 // Route for user profile page
-app.get('/profile', (req, res) => {
+app.get('/homepage', (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     // User is authenticated, display the profile page with the user object
-    res.render('profile', { user: req.session.user });
+    res.render('homepage', { user: req.session.user });
   } else {
     // User is not authenticated, redirect them to the login page
     res.redirect('/login');
