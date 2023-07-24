@@ -29,23 +29,20 @@
                     <a class="close" href="javascript:history.back()"><i class="fa fa-close"></i></a>
                     
                     <div class="pin-post-pic">
-                        <img src="<%= pinImageUrl %>" onclick="<%= pinOnClickFunction %>">
-                    </div>  
-
+                        <img src="<%= pinImageUrl %>" id="pinImage" onclick="pinOnClickFunction()">
+                    </div>
+                    
                     <div class="pin-post-container-right">
                         <span class="pin-title">Pin by:</span>
-
                         <div class="pin-profile-name">
-                            <img src="<%= profileImageUrl %>" onclick="<%= profileOnClickFunction %>">
-                            <span><a onclick="<%= profileOnClickFunction %>">@<%= profileUsername %></a></span>
+                            <img src="Images/loading.gif" id="profileImage" alt="Loading..." onclick="profileOnClickFunction('<%= pin.user._id %>')">
+                            <span><a href="/user/<%= pin.user._id %>/posts"><%= pin.user.username %></a></span>
                         </div>
-                        
                         <button type="button" class="heart">
                             <i class="fa fa-heart"></i>
                             <span>Hearts</span>
                         </button>
                     </div>
-                </div>
             </div>
         </div>
     </div>
