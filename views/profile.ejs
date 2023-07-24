@@ -6,6 +6,11 @@
     <title>User Profile</title>
 </head>
 <body>
-    <h1>Welcome, <%= username %>!</h1>
+    <h1>Welcome, <%= user.username %>!</h1>
+
+    <form method = "POST" action="/profile" enctype="multipart/form-data">
+        <input type = "file" name = "image">
+        <input type = "submit">
+    </form>
 </body>
 </html>

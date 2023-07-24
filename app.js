@@ -3,8 +3,21 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 
+const multer = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'Images')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+});
+
+const upload = multer({storage: storage})
+
 const User = require('./models/User');
 const Post = require('./models/Post');
+const path = require('path');
 
 const app = express();
 
@@ -24,7 +37,32 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
 
-// get
+// Route for handling profile picture upload
+// Route for handling profile picture upload
+app.post("/profile", upload.single("image"), (req, res) => {
+  // Check if the user is authenticated by checking the session
+  if (req.session.user) {
+    const userId = req.session.user._id;
+    const profilePicturePath = req.file.path; // Assuming 'path' is the field where multer stores the image path
+
+    // Update the profilePicture field for the logged-in user in the database
+    User.findByIdAndUpdate(userId, { profilePicture: profilePicturePath }, { new: true })
+      .then((user) => {
+        // Update the user data in the session with the new data from the database
+        req.session.user = user;
+        // Redirect back to the profile page after the update
+        res.redirect('/profile');
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Server error');
+      });
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
+});
+
 app.get('/add-user', (req, res) => {
   const user = new User({
     username: "paul",
@@ -125,9 +163,8 @@ app.post('/register', (req, res) => {
 app.get('/profile', (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
-    // User is authenticated, display the profile page (you can use a template engine like EJS, Pug, etc.)
-    // Here, we're just sending the user data as JSON to demonstrate.
-    res.send(req.session.user);
+    // User is authenticated, display the profile page with the user object
+    res.render('profile', { user: req.session.user });
   } else {
     // User is not authenticated, redirect them to the login page
     res.redirect('/login');
