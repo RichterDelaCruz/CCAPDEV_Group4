@@ -13,7 +13,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("../Images/redorange-background.png");
+  background-image: url("redorange-background.png");
   background-size: cover;
 }
 
