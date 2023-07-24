@@ -17,6 +17,7 @@ const upload = multer({storage: storage});
 
 const User = require('./models/User');
 const Post = require('./models/Post');
+const Comment = require('./models/Comment');
 const path = require('path');
 
 const app = express();
@@ -64,6 +65,30 @@ app.post("/profile", upload.single("image"), (req, res) => {
   }
 });
 
+app.get('/profile', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      // User is not authenticated, redirect them to the login page
+      return res.redirect('/login');
+    }
+
+    // Find all posts for the current user
+    const posts = await Post.find({ user_id: req.session.user._id }).exec();
+
+    // Find all comments for the posts and populate them
+    for (const post of posts) {
+      const comments = await Comment.find({ post_id: post._id }).exec();
+      post.comments = comments;
+    }
+
+    // Render the profile page with the user object and the posts
+    res.render('profile', { user: req.session.user, posts: posts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  }
+});
+
 // Route to handle the form submission for creating a new post
 app.post('/create-post', upload.single('photo'), (req, res) => {
   if (req.session.user) {
@@ -78,8 +103,7 @@ app.post('/create-post', upload.single('photo'), (req, res) => {
       user_id: user_id, // Use the user_id from the session
       content: content,
       timestamp: timestamp,
-      photo: photoPath,
-      comments: [] // Initially, the comments array is empty for a new post
+      photo: photoPath, // Use the 'photoPath' variable containing the uploaded image path
     });
 
     // Save the new post to the database
@@ -99,6 +123,61 @@ app.post('/create-post', upload.single('photo'), (req, res) => {
     res.redirect('/login');
   }
 });
+
+app.get('/profile', (req, res) => {
+    // Check if the user is authenticated by checking the session
+    if (req.session.user) {
+        // User is authenticated, display the profile page with the user object
+        // Fetch all the posts for the specific user and populate the 'user_id' field
+        Post.find({ user_id: req.session.user._id })
+            .populate('user_id')
+            .then((posts) => {
+                res.render('profile', { user: req.session.user, posts: posts });
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send('Server error');
+            });
+    } else {
+        // User is not authenticated, redirect them to the login page
+        res.redirect('/login');
+    }
+});
+
+app.post('/add-comment', (req, res) => {
+  if (req.session.user) {
+    const { post_id, content } = req.body;
+    const user_id = req.session.user._id;
+    const username = req.session.user.username;
+    const timestamp = new Date();
+
+    // Create a new comment using the Comment model
+    const newComment = new Comment({
+      post_id: post_id,
+      user_id: user_id,
+      username: username,
+      content: content,
+      timestamp: timestamp,
+    });
+
+    // Save the new comment to the database
+    newComment.save()
+      .then((comment) => {
+        console.log('New Comment:', comment);
+        // Redirect back to the profile page after posting the comment
+        res.redirect('/profile');
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Server error');
+      });
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
+});
+
+
 
 app.get('/add-user', (req, res) => {
   const user = new User({

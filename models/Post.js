@@ -11,16 +11,13 @@ const postSchema = new Schema({
     content: {
         type: String,
     },
-    Photo: {
-        type: String
+    photo: {
+        type: String,
     },
     timestamp: {
         type: Date,
         required: true
     },
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'Comment'
-    }],
 });
 
 // Create and export the 'Post' model
