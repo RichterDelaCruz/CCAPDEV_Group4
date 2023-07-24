@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/pin.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title><%= pageTitle %></title>
+</head>
+
+<body>
+    <nav>
+        <a href="homepage.html"><img src="Images/logo.png"></a>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search">
+            <button class="search-button"></button>
+        </div>
+    </nav>
+
+    <div class="pin-container">
+        <div class="middle-container">
+            <div class="feed">
+                <div class="post">
+                    <a class="close" href="javascript:history.back()"><i class="fa fa-close"></i></a>
+
+                    <div class="pin-post-pic" onclick="handleOnClick()">
+                        <img src="<%= postImageUrl %>">
+                    </div>
+
+                    <div class="pin-post-container-right">
+                        <span class="pin-title">Pin by:</span>
+
+                        <div class="pin-profile-name">
+                            <img src="Images/EmilySmith.png" onclick="EmilySmithProfilePhoto()">
+                            <span><a onclick="EmilySmithProfilePhoto()"><%= profileName %></a></span>
+                        </div>
+
+                        <button type="button" class="heart">
+                            <i class="fa fa-heart"></i>
+                            <span>Hearts</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
