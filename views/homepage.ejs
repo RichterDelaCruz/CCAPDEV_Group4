@@ -18,27 +18,15 @@
         <ul>
             <li><a href="/homepage">Homepage</a></li>
             <li><a href="/users">Search Users</a></li>
+            <li><a href="/login">Log out</a></li>
         </ul>
-    </nav>
-
-    <nav>
-        <a href="homepage.html"><img src="../images/logo.png"></a>
-
-        <h1 class="nav-title">Portfolio.
-            <ul class="nav-menu">
-              <li><a href="#top">Home</a></li>
-              <li><a href="#bio">About Me</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li><a href="#">Projects</a></li>        
-          </h1>
-            </ul>
     </nav>
     
     <h1>Welcome, <%= currentUser.username %>!</h1>
 
     <!-- Display the profile picture if it exists -->
     <% if (currentUser.profilePicture) { %>
-        <img src="<%= currentUser.profilePicture %>" alt="Profile Picture">
+        <img src="<%= currentUser.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
         <% } else { %>
             <!-- Display a default profile picture if the user has not uploaded a custom picture -->
             <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
@@ -67,22 +55,25 @@
                         <!-- Make the post content clickable and link to the specific post page -->
                         <a href="/post/<%= post._id %>">
                             <p style="color: orange;"><strong>
-                                <img src="<%= post.user_id.profilePicture %>" style="max-width: 100px;">
+                                    <img src="<%= post.user_id.profilePicture %>" style="max-width: 100px;">
 
                                     <%= post.username %>:
                                 </strong>
                                 <%= post.content %>
-                                <%= post.timestamp %>
+                                    <%= post.timestamp %>
                             </p>
                             <% if (post.photo) { %>
-                                <img src="<%= post.photo %>" alt="Post Photo">
+                                <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
                                 <% } %>
                         </a>
                         <p>
                             <strong>Likes:</strong>
-                            <span id="likesCount_<%= post._id %>"><%= post.likes.length %></span>
-                            <button id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')">Like</button>
-                          </p>
+                            <span id="likesCount_<%= post._id %>">
+                                <%= post.likes.length %>
+                            </span>
+                            <button id="likeButton_<%= post._id %>"
+                                onclick="toggleLike('<%= post._id %>')">Like</button>
+                        </p>
 
                         <!-- Display comments for this post if available -->
                         <% if (post.comments && post.comments.length> 0) { %>
@@ -106,31 +97,31 @@
                     <% }); %>
 
                         <script>
-                    // like.js
- function toggleLike(postId) {
-    const likesCountElement = document.getElementById(`likesCount_${postId}`);
-    const likeButton = document.getElementById(`likeButton_${postId}`);
-    const currentLikes = parseInt(likesCountElement.innerText);
+                            // like.js
+                            function toggleLike(postId) {
+                                const likesCountElement = document.getElementById(`likesCount_${postId}`);
+                                const likeButton = document.getElementById(`likeButton_${postId}`);
+                                const currentLikes = parseInt(likesCountElement.innerText);
 
-    // Make a POST request to the server to toggle the like
-    fetch('/toggle-like', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ postId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Update the like count on the page
-        likesCountElement.innerText = data.likesCount;
-        // Toggle the text of the button between "Like" and "Unlike"
-        likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
-      })
-      .catch((error) => {
-        console.error('Error toggling like:', error);
-      });
-  }
+                                // Make a POST request to the server to toggle the like
+                                fetch('/toggle-like', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ postId }),
+                                })
+                                    .then((response) => response.json())
+                                    .then((data) => {
+                                        // Update the like count on the page
+                                        likesCountElement.innerText = data.likesCount;
+                                        // Toggle the text of the button between "Like" and "Unlike"
+                                        likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error toggling like:', error);
+                                    });
+                            }
                         </script>
 </body>
 

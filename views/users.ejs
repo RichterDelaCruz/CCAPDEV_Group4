@@ -12,6 +12,7 @@
         <ul>
             <li><a href="/homepage">Homepage</a></li>
             <li><a href="/users">Search Users</a></li>
+            <li><a href="/login">Log out</a></li>
         </ul>
     </nav>
 
@@ -20,7 +21,7 @@
         <% users.forEach((user) => { %>
         <li>
             <a href="/profile/<%= user._id %>">
-                <img src="<%= user.profilePicture %>" alt="<%= user.username %>">
+                <img src="<%= user.profilePicture %>" alt="<%= user.username %>" style="max-width: 100px;">
                 <%= user.username %>
             </a>
  </li>
