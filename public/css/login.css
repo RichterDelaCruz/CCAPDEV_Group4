@@ -38,6 +38,11 @@ body {
   font-weight: bold;
 }
 
+.signup-container {
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 100vh;
+}
+
 .container {
   width: 45%;
   margin: 0px;
@@ -112,12 +117,12 @@ body {
   color: #000000;
 }
 
-.container .form-content .button {
+.button-signup {
   color: #fff;
   margin-top: 15px;
 }
 
-.container .form-content .button input {
+.button-signup input {
   color: #fff;
   font-size: 18px;
   font-weight: 1000;
@@ -132,8 +137,32 @@ body {
   outline: none;
 }
 
-.container .form-content .button input:hover {
-  background: #fff3a6;
+.button-signup input:hover {
+  background: #c8d852;
+}
+
+.button-login {
+  color: #fff;
+  margin-top: 15px;
+}
+
+.button-login input {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 1000;
+  height: 60px; 
+  width: 140px;
+  padding: 1;
+  background: #00b2ff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  outline: none;
+}
+
+.button-login input:hover {
+  background: #c8d852;
 }
 
 .container .form-content label {
@@ -148,3 +177,4 @@ body {
   text-align: center;
   margin-top: 25px;
 }
+
