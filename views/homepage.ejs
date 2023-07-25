@@ -4,15 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Homepage</title>
+
 </head>
 
 <body>
-    <h1>Welcome, <%= user.username %>!</h1>
+    <nav>
+        <ul>
+            <li><a href="/homepage">Homepage</a></li>
+            <li><a href="/users">Search Users</a></li>
+        </ul>
+    </nav>
+    
+    <h1>Welcome, <%= currentUser.username %>!</h1>
 
     <!-- Display the profile picture if it exists -->
-    <% if (user.profilePicture) { %>
-        <img src="<%= user.profilePicture %>" alt="Profile Picture">
+    <% if (currentUser.profilePicture) { %>
+        <img src="<%= currentUser.profilePicture %>" alt="Profile Picture">
         <% } else { %>
             <!-- Display a default profile picture if the user has not uploaded a custom picture -->
             <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
@@ -21,7 +29,7 @@
 
                 <form method="POST" action="/homepage" enctype="multipart/form-data">
                     <input type="file" name="image">
-                    <input type="submit">
+                    <input type="submit" value="Change Profile Picture">
                 </form>
 
                 <!-- Form to create a new post -->
@@ -34,32 +42,78 @@
                     <input type="file" name="photo">
                     <input type="submit" value="Create Post">
                 </form>
-    
-                <% posts.forEach((post) => { %>
+
+                <!-- Display all posts -->
+                <% posts.forEach((post)=> { %>
                     <div>
-                        <p><strong><%= post.username %>:</strong> <%= post.content %></p>
-                        <% if (post.photo) { %>
-                            <img src="<%= post.photo %>" alt="Post Photo">
-                        <% } %>
-                        <!-- Comment box for each post -->
-                        <form method="POST" action="/add-comment">
-                            <!-- Hidden input to store the post ID -->
-                            <input type="hidden" name="post_id" value="<%= post._id %>">
-                            <label for="content">Comment:</label>
-                            <input type="text" name="content" id="content">
-                            <input type="submit" value="Post Comment">
-                        </form>
+                        <!-- Make the post content clickable and link to the specific post page -->
+                        <a href="/post/<%= post._id %>">
+                            <p style="color: orange;"><strong>
+                                <img src="<%= post.user_id.profilePicture %>" style="max-width: 100px;">
+
+                                    <%= post.username %>:
+                                </strong>
+                                <%= post.content %>
+                                <%= post.timestamp %>
+                            </p>
+                            <% if (post.photo) { %>
+                                <img src="<%= post.photo %>" alt="Post Photo">
+                                <% } %>
+                        </a>
+                        <p>
+                            <strong>Likes:</strong>
+                            <span id="likesCount_<%= post._id %>"><%= post.likes.length %></span>
+                            <button id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')">Like</button>
+                          </p>
+
                         <!-- Display comments for this post if available -->
-                        <% if (post.comments && post.comments.length > 0) { %>
-                            <% post.comments.forEach((comment) => { %>
+                        <% if (post.comments && post.comments.length> 0) { %>
+                            <% for (let i=0; i < Math.min(2, post.comments.length); i++) { %>
                                 <div>
-                                    <p><strong><%= comment.username %>:</strong> <%= comment.content %></p>
+
+                                    <p><strong>
+                                            <%= post.comments[i].username %>:
+                                        </strong>
+                                        <%= post.comments[i].content %>
+                                    </p>
                                 </div>
-                            <% }); %>
-                        <% } else { %>
-                            <p>No comments for this post.</p>
-                        <% } %>
+                                <% } %>
+                                    <% if (post.comments.length> 2) { %>
+                                        <p><em>Show more comments...</em></p>
+                                        <% } %>
+                                            <% } else { %>
+                                                <p>No comments for this post.</p>
+                                                <% } %>
                     </div>
-                <% }); %>
+                    <% }); %>
+
+                        <script>
+                    // like.js
+ function toggleLike(postId) {
+    const likesCountElement = document.getElementById(`likesCount_${postId}`);
+    const likeButton = document.getElementById(`likeButton_${postId}`);
+    const currentLikes = parseInt(likesCountElement.innerText);
+
+    // Make a POST request to the server to toggle the like
+    fetch('/toggle-like', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ postId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the like count on the page
+        likesCountElement.innerText = data.likesCount;
+        // Toggle the text of the button between "Like" and "Unlike"
+        likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
+      })
+      .catch((error) => {
+        console.error('Error toggling like:', error);
+      });
+  }
+                        </script>
 </body>
+
 </html>

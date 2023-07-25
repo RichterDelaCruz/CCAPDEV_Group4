@@ -10,14 +10,24 @@ const postSchema = new Schema({
         },
     content: {
         type: String,
+        required: true,
     },
     photo: {
         type: String,
+        required: true,
     },
     timestamp: {
         type: Date,
         required: true
     },
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }],
 });
 
 // Create and export the 'Post' model

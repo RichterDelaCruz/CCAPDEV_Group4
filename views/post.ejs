@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post</title>
+</head>
+
+<body>
+  <h1>Post Details</h1>
+  <div>
+    <p> <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture">
+      <strong>
+        <%= post.user_id.username %>
+      </strong>
+    </p>
+
+    <p>
+      <%= post.content %>
+    </p>
+
+  </div>
+
+  <!-- Display the profile picture if it exists -->
+  <% if (post.photo) { %>
+    <img src="<%= post.photo %>" alt="Post Photo">
+    <% } else { %>
+      <p>No photo for this post.</p>
+      <% } %>
+        <p><strong>Likes:</strong>
+          <span id="likesCount">
+            <%= post.likes.length %>
+          </span>
+          <button id="likeButton" onclick="toggleLike('<%= post._id %>')">Like</button>
+        </p>
+        <!-- Comment form -->
+        <form method="POST" action="/add-comment">
+          <!-- Hidden input to store the post ID -->
+          <input type="hidden" name="post_id" value="<%= post._id %>">
+          <label for="content">Comment:</label>
+          <input type="text" name="content" id="content">
+          <input type="submit" value="Post Comment">
+        </form>
+        <!-- Display comments for this post if available -->
+        <% if (post.comments && post.comments.length> 0) { %>
+          <% post.comments.forEach((comment)=> { %>
+            <div>
+              <p> <img src="<%= comment.user_id.profilePicture%>">
+                <strong>
+                  <%= comment.username %>:
+                </strong>
+                <%= comment.timestamp %>:
+                <%= comment.content %>
+              </p>
+            </div>
+            <% }); %>
+              <% } else { %>
+                <p>No comments for this post.</p>
+                <% } %>
+
+                  <script>
+                    // like.js
+                    document.addEventListener('DOMContentLoaded', () => {
+                      // Get the post ID
+                      const postId = '<%= post._id %>';
+
+                      // Get the like status from local storage (if it exists)
+                      const isLiked = localStorage.getItem(`liked_${postId}`);
+
+                      // Update the like button text based on the like status
+                      const likeButton = document.getElementById('likeButton');
+                      likeButton.innerText = isLiked === 'true' ? 'Unlike' : 'Like';
+                    });
+
+                    function toggleLike(postId) {
+                      // Fetch the current like count
+                      const likesCountElement = document.getElementById('likesCount');
+                      const currentLikes = parseInt(likesCountElement.innerText);
+
+                      // Make a POST request to the server to toggle the like
+                      fetch('/toggle-like', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ postId }),
+                      })
+                        .then((response) => response.json())
+                        .then((data) => {
+                          // Update the like count on the page
+                          likesCountElement.innerText = data.likesCount;
+
+                          // Update the like status in local storage
+                          localStorage.setItem(`liked_${postId}`, data.isLiked);
+
+                          // Toggle the text of the button between "Like" and "Unlike"
+                          const likeButton = document.getElementById('likeButton');
+                          likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
+                        })
+                        .catch((error) => {
+                          console.error('Error toggling like:', error);
+                        });
+                    }
+                  </script>
+</body>
+
+</html>

@@ -16,6 +16,15 @@ const userSchema = new Schema({
         type: String, // Store the URL or path to the profile picture
         default: '../images/default-profile-picture.jpg' // Set the default path to the profile picture
     },
+    likedPosts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
+        // Add a reference to the user's posts
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
 });
 
 // Create and export the 'User' model

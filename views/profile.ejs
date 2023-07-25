@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/homepage">Homepage</a></li>
+            <li><a href="/users">Search Users</a></li>
+        </ul>
+    </nav>
+
+    <h1>Welcome, <%= user.username %>!</h1>
+
+    <!-- Display the profile picture if it exists -->
+    <% if (user.profilePicture) { %>
+        <img src="<%= user.profilePicture %>" alt="Profile Picture">
+        <% } else { %>
+            <!-- Display a default profile picture if the user has not uploaded a custom picture -->
+            <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
+            <p>No profile picture uploaded.</p>
+            <% } %>
+    
+<% posts.forEach((post) => { %>
+        <div>
+            <a href="/post/<%= post._id %>">
+                <% if (post.photo) { %>
+                    <img src="<%= post.photo %>" alt="Post Photo">
+                <% } %>
+            </a>
+        </div>
+    <% }); %>
+</body>
+</html>
