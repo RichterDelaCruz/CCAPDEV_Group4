@@ -1,0 +1,83 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+div.board-container {
+    justify-content: center;
+}
+
+.board-title {
+    font-weight: bold;
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+}
+
+.board-contents {
+    position: relative;
+    background-color: white;
+    padding: 30px;
+    margin: 0 0 30px 0;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.board-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 75px;
+}
+
+.board-profile-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.board-profile-name img {
+    max-height: 100px;
+    border-radius: 50%;
+    margin: 15px;
+    cursor: pointer;
+}
+
+.board-profile-name span {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #ffa800;
+}
+
+.board-profile-name span:hover {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #00b2ff;
+}
+
+.board-photos {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    max-width: 100%;
+    height: auto;
+    justify-content: center;
+}
+
+.board-photos img{
+    background-size: cover;
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: 350px;
+    height: 350px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+

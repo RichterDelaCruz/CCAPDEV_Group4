@@ -3,22 +3,30 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/board.css">
+    <link rel="stylesheet" href="/css/homepage.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
 </head>
 
 <body>
     <nav>
-        <ul>
-            <li><a href="/homepage">Homepage</a></li>
-            <li><a href="/users">Search Users</a></li>
-            <li><a href="/login">Log out</a></li>
-        </ul>
+        <div class="search-box">
+       
+       <a href="/homepage">Homepage</a>
+       <a href="/users">Search Users</a>
+       <a href="/login">Log out</a>
+       
+        </div>
     </nav>
 
-    <h1>Welcome, <%= user.username %>!</h1>
+    <div class="board-container">
+    <div class="board-contents" style="cursor: pointer;">
+    
 
+    <div class="board-profile">
     <!-- Display the profile picture if it exists -->
+    <div class="board-profile-name">
     <% if (user.profilePicture) { %>
         <img src="<%= user.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
         <% } else { %>
@@ -26,15 +34,23 @@
             <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture" style="max-width: 100px;">
             <p>No profile picture uploaded.</p>
             <% } %>
+        <span>@<%= user.username %></span>
+    </div>
+    </div>
     
+    
+<div class="board-photos">
 <% posts.forEach((post) => { %>
         <div>
             <a href="/post/<%= post._id %>">
                 <% if (post.photo) { %>
-                    <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
+                    <img src="<%= post.photo %>" alt="Post Photo">
                 <% } %>
             </a>
         </div>
     <% }); %>
+    </div>
+    </div>
+    </div>
 </body>
 </html>
