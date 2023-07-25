@@ -6,11 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post</title>
 </head>
+<ul>
+  <li><a href="/homepage">Homepage</a></li>
+  <li><a href="/users">Search Users</a></li>
+  <li><a href="/login">Log out</a></li>
+</ul>
 
 <body>
   <h1>Post Details</h1>
   <div>
-    <p> <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture">
+    <p> <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
       <strong>
         <%= post.user_id.username %>
       </strong>
@@ -24,7 +29,7 @@
 
   <!-- Display the profile picture if it exists -->
   <% if (post.photo) { %>
-    <img src="<%= post.photo %>" alt="Post Photo">
+    <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
     <% } else { %>
       <p>No photo for this post.</p>
       <% } %>
@@ -46,7 +51,7 @@
         <% if (post.comments && post.comments.length> 0) { %>
           <% post.comments.forEach((comment)=> { %>
             <div>
-              <p> <img src="<%= comment.user_id.profilePicture%>">
+              <p> <img src="<%= comment.user_id.profilePicture%>" style="max-width: 100px;">
                 <strong>
                   <%= comment.username %>:
                 </strong>

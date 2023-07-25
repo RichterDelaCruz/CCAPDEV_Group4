@@ -54,7 +54,7 @@ app.post("/homepage", upload.single("image"), (req, res) => {
         // Update the user data in the session with the new data from the database
         req.session.user = user;
         // Redirect back to the profile page after the update
-        res.redirect('/profile');
+        res.redirect('/homepage');
       })
       .catch((err) => {
         console.log(err);
@@ -132,7 +132,7 @@ app.post('/create-post', upload.single('photo'), (req, res) => {
             console.log('User updated:', user); // Check if the user data is updated correctly
 
             // ... (rest of the code, e.g., redirecting or rendering a page)
-            res.redirect('/profile'); // Redirecting to the profile page after creating a new post
+            res.redirect('/homepage'); // Redirecting to the profile page after creating a new post
           })
           .catch((err) => {
             console.log(err);
