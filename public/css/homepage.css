@@ -46,6 +46,38 @@ nav img {
     padding: 0 30px;
 }
 
+.nav-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.4rem;
+    margin: 0;
+    display: inline-block;
+  }
+  
+  .nav-menu {
+    font-family: 'Roboto', sans-serif;
+    font-weight: normal;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+  }
+  
+  .nav-menu li {
+      display: inline-block;
+    margin-left: 20px;
+  }
+  
+  .nav-menu li:first-child {
+    margin-left: 0;
+  }
+  
+  .nav-menu li a {
+    text-decoration: none;
+    color: #000000;
+  }
+
 .search-box {
     position: relative;
     display: block;
