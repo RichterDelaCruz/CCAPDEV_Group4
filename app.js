@@ -13,10 +13,11 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({storage: storage})
+const upload = multer({storage: storage});
 
 const User = require('./models/User');
 const Post = require('./models/Post');
+const Comment = require('./models/Comment');
 const path = require('path');
 
 const app = express();
@@ -30,6 +31,9 @@ app.use(session({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use("/images", express.static('images'));
+app.use(express.static('public'));
+
 app.set('view engine', 'ejs');
 
 const dbURI = 'mongodb+srv://user:12345@cluster0.hdkzd0w.mongodb.net/homebuddies?retryWrites=true&w=majority';
@@ -38,12 +42,11 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch((err) => console.log(err));
 
 // Route for handling profile picture upload
-// Route for handling profile picture upload
-app.post("/profile", upload.single("image"), (req, res) => {
+app.post("/homepage", upload.single("image"), (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     const userId = req.session.user._id;
-    const profilePicturePath = req.file.path; // Assuming 'path' is the field where multer stores the image path
+    const profilePicturePath = "/images/" + req.file.filename; // Assuming 'path' is the field where multer stores the image path
 
     // Update the profilePicture field for the logged-in user in the database
     User.findByIdAndUpdate(userId, { profilePicture: profilePicturePath }, { new: true })
@@ -51,7 +54,7 @@ app.post("/profile", upload.single("image"), (req, res) => {
         // Update the user data in the session with the new data from the database
         req.session.user = user;
         // Redirect back to the profile page after the update
-        res.redirect('/profile');
+        res.redirect('/homepage');
       })
       .catch((err) => {
         console.log(err);
@@ -62,6 +65,134 @@ app.post("/profile", upload.single("image"), (req, res) => {
     res.redirect('/login');
   }
 });
+
+
+app.get('/homepage', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      // User is not authenticated, redirect them to the login page
+      return res.redirect('/login');
+    }
+
+    // Find all posts for the current user
+    const posts = await Post.find({ user_id: req.session.user._id }).exec();
+
+    // Fetch the username for each post using the 'user_id' in the Post model
+    for (const post of posts) {
+      const user = await User.findById(post.user_id).exec();
+      post.username = user.username; // Add the 'username' field to the post
+    }
+
+    // Fetch comments for each post and populate the 'user_id' field to access user data
+    for (const post of posts) {
+      const comments = await Comment.find({ post_id: post._id }).exec();
+
+      // Fetch the username for each comment using the 'user_id' in the Comment model
+      for (const comment of comments) {
+        const user = await User.findById(comment.user_id).exec();
+        comment.username = user.username; // Add the 'username' field to the comment
+      }
+
+      post.comments = comments;
+    }
+
+    // Render the profile page with the user object and the posts
+    res.render('homepage', { user: req.session.user, posts: posts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Route to handle the form submission for creating a new post
+app.post('/create-post', upload.single('photo'), (req, res) => {
+  if (req.session.user) {
+    // Extract the necessary data from the request
+    const { content } = req.body;
+    const timestamp = new Date();
+    const photoPath = req.file ? `/images/${req.file.filename}` : null;
+    const user_id = req.session.user._id;
+
+    // Assuming the 'user_id' is a valid MongoDB ObjectId
+    const newPost = new Post({
+      user_id: user_id, // Use the user_id from the session
+      content: content,
+      timestamp: timestamp,
+      photo: photoPath, // Use the 'photoPath' variable containing the uploaded image path
+    });
+
+    // Save the new post to the database
+    newPost.save()
+      .then((post) => {
+        console.log('New Post:', post); // Check if the new post data is correct
+
+        // ... (rest of the code, e.g., redirecting or rendering a page)
+        res.redirect('/homepage'); // Redirecting to the profile page after creating a new post
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Server error');
+      });
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
+});
+
+app.get('/homepage', (req, res) => {
+    // Check if the user is authenticated by checking the session
+    if (req.session.user) {
+        // User is authenticated, display the profile page with the user object
+        // Fetch all the posts for the specific user and populate the 'user_id' field
+        Post.find({ user_id: req.session.user._id })
+            .populate('user_id')
+            .then((posts) => {
+                res.render('homepage', { user: req.session.user, posts: posts });
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send('Server error');
+            });
+    } else {
+        // User is not authenticated, redirect them to the login page
+        res.redirect('/login');
+    }
+});
+
+app.post('/add-comment', (req, res) => {
+  if (req.session.user) {
+    const { post_id, content } = req.body;
+    const user_id = req.session.user._id;
+    const username = req.session.user.username;
+    const timestamp = new Date();
+
+    // Create a new comment using the Comment model
+    const newComment = new Comment({
+      post_id: post_id,
+      user_id: user_id,
+      username: username,
+      content: content,
+      timestamp: timestamp,
+    });
+
+    // Save the new comment to the database
+    newComment.save()
+      .then((comment) => {
+        console.log('New Comment:', comment);
+        // Redirect back to the profile page after posting the comment
+        res.redirect('/homepage');
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send('Server error');
+      });
+  } else {
+    // User is not authenticated, redirect them to the login page
+    res.redirect('/login');
+  }
+});
+
+
 
 app.get('/add-user', (req, res) => {
   const user = new User({
@@ -115,7 +246,7 @@ app.post('/login', (req, res) => {
         req.session.user = user;
         console.log(req.session.user); // Add this line to check session data
         // Handle successful login here (e.g., redirect to their profile page)
-        res.redirect('/profile');
+        res.redirect('/homepage');
       } else {
         // User is not found or password is incorrect, handle login failure
         res.send('Invalid username or password');
@@ -160,11 +291,11 @@ app.post('/register', (req, res) => {
 });
 
 // Route for user profile page
-app.get('/profile', (req, res) => {
+app.get('/homepage', (req, res) => {
   // Check if the user is authenticated by checking the session
   if (req.session.user) {
     // User is authenticated, display the profile page with the user object
-    res.render('profile', { user: req.session.user });
+    res.render('homepage', { user: req.session.user });
   } else {
     // User is not authenticated, redirect them to the login page
     res.redirect('/login');

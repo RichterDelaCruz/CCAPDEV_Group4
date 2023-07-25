@@ -13,11 +13,9 @@ const userSchema = new Schema({
         required: true
     },
     profilePicture: {
-        type: String // Store the URL or path to the profile picture
+        type: String, // Store the URL or path to the profile picture
+        default: '../images/default-profile-picture.jpg' // Set the default path to the profile picture
     },
-    posts: [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'Post'
-    }],
 });
 
 // Create and export the 'User' model

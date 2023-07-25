@@ -4,16 +4,11 @@ const Schema = mongoose.Schema;
 // Create a schema for the 'Comment' model
 const commentSchema = new Schema({
     post_id: {
-        type: Number,
+        type: Schema.Types.ObjectId,
         required: true
     },
-    comment_id: {
-        type: Number,
-        required: true,
-        unique: true
-    },
     user_id: {
-        type: Number,
+        type: Schema.Types.ObjectId,
         required: true
     },
     username: {
@@ -33,3 +28,4 @@ const commentSchema = new Schema({
 
 // Create and export the 'Comment' model
 const Comment = mongoose.model('Comment', commentSchema);
+module.exports = Comment;
