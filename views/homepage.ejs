@@ -116,7 +116,8 @@
                             <% if (post.comments && post.comments.length > 0) { %>
                               <% for (let i = 0; i < Math.min(2, post.comments.length); i++) { %>
                                 <div class="comment">
-                                  <div class="comment-profile-pic">
+                                  <img src="<%= post.comments[i].profilePicture %>" alt="Commenter Profile Picture">
+                                <div class="comment-profile-pic">
                                     <a href="/profile/<%= post.comments[i].user_id %>"><img src="<%= post.comments[i].profilePicture %>" alt="Commenter Profile Picture"></a>
                                   </div>
                                   <div class="comment-content">
