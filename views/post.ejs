@@ -4,13 +4,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <link rel="stylesheet" href="/css/homepage.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
   <title>Post</title>
+  <style>
+    #likeButton {
+      cursor: pointer;
+    }
+
+    /* Orange color */
+    #likeButton:not(.liked) {
+      color: #FFA500;
+    }
+
+    /* Darker orange color when liked */
+    #likeButton.liked {
+      color: #FF4500;
+    }
+  </style>
 </head>
 
 <body>
@@ -110,84 +119,73 @@
   <!-- Display the profile picture if it exists -->
   <% if (post.photo) { %>
     <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
-    <% } else { %>
-      <p>No photo for this post.</p>
-      <% } %>
-        <p><strong>Likes:</strong>
-          <span id="likesCount">
-            <%= post.likes.length %>
-          </span>
-          <button id="likeButton" onclick="toggleLike('<%= post._id %>')">Like</button>
+  <% } else { %>
+    <p>No photo for this post.</p>
+  <% } %>
+  <p>
+    <strong>Likes:</strong>
+    <span id="likesCount">
+      <%= post.likes.length %>
+    </span>
+    <span id="likeButton" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up"></span>
+  </p>
+
+  <!-- Comment form -->
+  <form method="POST" action="/add-comment">
+    <!-- Hidden input to store the post ID -->
+    <input type="hidden" name="post_id" value="<%= post._id %>">
+    <label for="content">Comment:</label>
+    <input type="text" name="content" id="content">
+    <input type="submit" value="Post Comment">
+  </form>
+
+  <!-- Display comments for this post if available -->
+  <% if (post.comments && post.comments.length > 0) { %>
+    <% post.comments.forEach((comment) => { %>
+      <div>
+        <p>
+          <img src="<%= comment.user_id.profilePicture %>" style="max-width: 100px;">
+          <strong><%= comment.username %>:</strong>
+          <%= comment.timestamp %>:
+          <%= comment.content %>
         </p>
-        <!-- Comment form -->
-        <form method="POST" action="/add-comment">
-          <!-- Hidden input to store the post ID -->
-          <input type="hidden" name="post_id" value="<%= post._id %>">
-          <label for="content">Comment:</label>
-          <input type="text" name="content" id="content">
-          <input type="submit" value="Post Comment">
-        </form>
-        <!-- Display comments for this post if available -->
-        <% if (post.comments && post.comments.length> 0) { %>
-          <% post.comments.forEach((comment)=> { %>
-            <div>
-              <p> <img src="<%= comment.user_id.profilePicture%>" style="max-width: 100px;">
-                <strong>
-                  <%= comment.username %>:
-                </strong>
-                <%= comment.timestamp %>:
-                <%= comment.content %>
-              </p>
-            </div>
-            <% }); %>
-              <% } else { %>
-                <p>No comments for this post.</p>
-                <% } %>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>No comments for this post.</p>
+  <% } %>
 
-                  <script>
-                    // like.js
-                    document.addEventListener('DOMContentLoaded', () => {
-                      // Get the post ID
-                      const postId = '<%= post._id %>';
+  <script>
+    // like.js
+    function toggleLike(postId) {
+                                const likesCountElement = document.getElementById(`likesCount_${postId}`);
+                                const likeButton = document.getElementById(`likeButton_${postId}`);
+                                const currentLikes = parseInt(likesCountElement.innerText);
+                                
+                                // Make a POST request to the server to toggle the like
+                                fetch('/toggle-like', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ postId }),
+                                })
+                                    .then((response) => response.json())
+                                    .then((data) => {
+                                        // Update the like count on the page
+                                        likesCountElement.innerText = data.likesCount;
+                                        // Toggle the text of the button between "Like" and "Unlike"
+                                        likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
+                                        // Change the color of the thumbs-up icon based on like/unlike status
+                                        const likeIcon = document.querySelector(`#likeButton_${postId} i`);
+                                        likeIcon.classList.toggle('liked', data.isLiked);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error toggling like:', error);
+                                    });
+                            }
+  </script>
 
-                      // Get the like status from local storage (if it exists)
-                      const isLiked = localStorage.getItem(`liked_${postId}`);
-
-                      // Update the like button text based on the like status
-                      const likeButton = document.getElementById('likeButton');
-                      likeButton.innerText = isLiked === 'true' ? 'Unlike' : 'Like';
-                    });
-
-                    function toggleLike(postId) {
-                      // Fetch the current like count
-                      const likesCountElement = document.getElementById('likesCount');
-                      const currentLikes = parseInt(likesCountElement.innerText);
-
-                      // Make a POST request to the server to toggle the like
-                      fetch('/toggle-like', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ postId }),
-                      })
-                        .then((response) => response.json())
-                        .then((data) => {
-                          // Update the like count on the page
-                          likesCountElement.innerText = data.likesCount;
-
-                          // Update the like status in local storage
-                          localStorage.setItem(`liked_${postId}`, data.isLiked);
-
-                          // Toggle the text of the button between "Like" and "Unlike"
-                          const likeButton = document.getElementById('likeButton');
-                          likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
-                        })
-                        .catch((error) => {
-                          console.error('Error toggling like:', error);
-                        });
-                    }
-                  </script>
 </body>
 
 </html>
