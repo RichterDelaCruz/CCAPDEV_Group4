@@ -1,0 +1,39 @@
+--Node.js Application--
+Welcome to our Node.js application! This application allows you to post, like, and comment on various content.
+
+--Getting Started--
+Follow these steps to set up and run the application locally on your machine:
+
+1. Clone the Repository
+Clone or download this repository to your local machine.
+
+2. Install Dependencies
+Open a terminal (command prompt, PowerShell, or terminal in VSCode) and navigate to the root directory of the project (where the package.json file is located).
+Run the following command to install the required dependencies:
+'npm install'
+
+3. Start the Server
+In the same terminal, run the following command to start the Node.js server:
+'nodemon app'
+
+4. Open the Application
+Once the server is running, open your web browser and navigate to:
+'http://localhost:3000/login'
+
+--Users--
+You can use the following credentials to log in as existing users:
+
+Username: AlexJohnson | Password: 123
+Username: SarahBrown | Password: 123
+Username: DanielDavis | Password: 123
+Username: EmilySmith | Password: 123
+Username: OliviaMiller | Password: 123
+
+Feel free to create a new account by signing up and signing in with your new account.
+
+--Features--
+With this application, you can:
+
+Create new posts and share your content with others.
+Like posts from other users to show your appreciation.
+Leave comments on posts to engage in discussions.
