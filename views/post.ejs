@@ -4,16 +4,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <title>Post</title>
 </head>
-<ul>
-  <li><a href="/homepage">Homepage</a></li>
-  <li><a href="/users">Search Users</a></li>
-  <li><a href="/login">Log out</a></li>
-</ul>
 
 <body>
-  <h1>Post Details</h1>
+
+  <nav>
+    <a href="/homepage"><img src="/images/logo.png"></a>
+
+    <ul class="nav-menu">
+        <li><a href="/homepage"><button class="homebutton" >Homepage</button></a></li>
+        <li><a href="/users"><button class="homebutton" >Search Users</button></a></li>
+        <li><a href="/login"><button class="homebutton" >Log out</button></a></li>
+        </h1>
+    </ul>
+</nav>
+
+  <!--<h1>Post Details</h1>-->
+  
+  <div class="post-detail-container">
+    <div class="post-image-container">
+        <!-- Display the post image -->
+        <% if (post.photo) { %>
+        <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100%;">
+        <% } else { %>
+        <p>No photo for this post.</p>
+        <% } %>
+    </div>
+    <div class="user-info-like-container">
+        <!-- User Info Container -->
+        <div class="user-info-container">
+            <!-- Display user profile picture, username, and timestamp -->
+            <div class="profile-pic">
+                  <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture">
+          </div> 
+          <div>
+            <div class="timestamp"><%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></div>
+        </div>
+        </div>
+        <!-- Like button and Like count -->
+        <div class="like-container">
+            <span class="like-icon">
+                <i class="fas fa-thumbs-up fa-2x" id="likeButton_<%= post._id %>"
+                    onclick="toggleLike('<%= post._id %>')"></i>
+            </span>
+            <span class="like-count" id="likesCount_<%= post._id %>"><%= post.likes.length %></span>
+        </div>
+        <!-- Comment form -->
+        <form method="POST" action="/add-comment">
+            <!-- Hidden input to store the post ID -->
+            <input type="hidden" name="post_id" value="<%= post._id %>">
+            <input type="text" name="content" id="content" style="width: 93%;">
+            <div class="button-wrapper"><input type="submit" value="Post Comment" class="submit-button"></div>
+            
+        </form>
+        <div class="comments-section">
+          <!-- Display comments for this post if available -->
+          <% if (post.comments && post.comments.length> 0) { %>
+          <% post.comments.forEach((comment)=> { %>
+          <div class="comment">
+              <div class="comment-profile-pic">
+                <img src="<%= comment.user_id.profilePicture%>" alt="Commenter Profile Picture" style="max-width: 100px;">
+              </div>
+              <div class="comment-content">
+                  <p>
+                      <strong><%= comment.username %></strong>
+                      <time><%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></time>
+                  </p>
+                  
+                  <%= comment.content %>
+
+              </div>
+          </div>
+          <% }); %>
+          <% } else { %>
+          <p>No comments for this post.</p>
+          <% } %>
+      </div>
+    </div>
+    <!-- Comments section -->
+
+</div>
+
+  
   <div>
     <p> <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
       <strong>
