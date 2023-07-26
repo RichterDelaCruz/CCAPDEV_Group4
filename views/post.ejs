@@ -4,6 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
   <title>Post</title>
   <style>
     #likeButton {
@@ -102,58 +112,6 @@
 </div>
 
   
-  <div>
-    <p> <img src="<%= post.user_id.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
-      <strong>
-        <%= post.user_id.username %>
-      </strong>
-      <%= post.timestamp %>
-    </p>
-
-    <p>
-      <%= post.content %>
-    </p>
-
-  </div>
-
-  <!-- Display the profile picture if it exists -->
-  <% if (post.photo) { %>
-    <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
-  <% } else { %>
-    <p>No photo for this post.</p>
-  <% } %>
-  <p>
-    <strong>Likes:</strong>
-    <span id="likesCount">
-      <%= post.likes.length %>
-    </span>
-    <span id="likeButton" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up"></span>
-  </p>
-
-  <!-- Comment form -->
-  <form method="POST" action="/add-comment">
-    <!-- Hidden input to store the post ID -->
-    <input type="hidden" name="post_id" value="<%= post._id %>">
-    <label for="content">Comment:</label>
-    <input type="text" name="content" id="content">
-    <input type="submit" value="Post Comment">
-  </form>
-
-  <!-- Display comments for this post if available -->
-  <% if (post.comments && post.comments.length > 0) { %>
-    <% post.comments.forEach((comment) => { %>
-      <div>
-        <p>
-          <img src="<%= comment.user_id.profilePicture %>" style="max-width: 100px;">
-          <strong><%= comment.username %>:</strong>
-          <%= comment.timestamp %>:
-          <%= comment.content %>
-        </p>
-      </div>
-    <% }); %>
-  <% } else { %>
-    <p>No comments for this post.</p>
-  <% } %>
 
   <script>
     // like.js
