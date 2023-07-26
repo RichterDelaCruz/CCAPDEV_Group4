@@ -3,30 +3,62 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="stylesheet" href="/css/search-users.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users</title>
 </head>
 
 <body>
     <nav>
-        <ul>
-            <li><a href="/homepage">Homepage</a></li>
-            <li><a href="/users">Search Users</a></li>
-            <li><a href="/login">Log out</a></li>
-        </ul>
+        <div>
+            <a href="/homepage">Homepage</a>
+            <a href="/users">Search Users</a>
+            <a href="/login">Log out</a>
+        </div>
     </nav>
 
-    <h1>List of Users</h1>
-    <ul>
-        <% users.forEach((user) => { %>
-        <li>
-            <a href="/profile/<%= user._id %>">
-                <img src="<%= user.profilePicture %>" alt="<%= user.username %>" style="max-width: 100px;">
-                <%= user.username %>
-            </a>
- </li>
-        <% }); %>
-    </ul>
+    <div class="search-users-container">
+        <div class="search-users-contents" style="cursor: pointer;">
+            <h1>Search User</h1>
+            <div class="search-users-line">
+                <hr>
+            </div>
+                <div class="search-users-profile">
+                    <div class="search-users-profile-name">
+                        <div class="search-users-profile-list">
+                            <div class="search-users-profile-list-pic">
+                                <% users.forEach((user) => { %>
+                        
+                                <a href="/profile/<%= user._id %>">
+                                    <img src="<%= user.profilePicture %>" alt="<%= user.username %>">
+                                    <!-- <div class="search-users-profile-list-name">
+                                        <span>@<%= user.username %></span>
+                                    </div> -->
+                                </a>
+                        
+                                <% }); %>
+                            </div>
+
+                            <div class="search-users-profile-list-name">
+                                <% users.forEach((user) => { %>
+                        
+                                    <a href="/profile/<%= user._id %>">
+                                        <!-- <img src="<%= user.profilePicture %>" alt="<%= user.username %>" style="max-width: 100px;"> -->
+                                        <!-- <div class="search-users-profile-list-name"> -->
+                                            <span>@<%= user.username %></span>
+                                        <!-- </div> -->
+                                    </a>
+                            
+                                    <% }); %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+        </div>
+    </div>
       
 </body>
 

@@ -1,0 +1,121 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.search-users-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-title {
+    font-weight: bold;
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+}
+
+.search-users-contents {
+    position: relative;
+    background-color: white;
+    padding-top: 0px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    cursor: pointer;
+    justify-content: left;
+    align-items: left;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.search-users-contents h1{
+    margin-bottom: 8px;
+}
+
+.search-users-profile {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    flex-direction: column;
+}
+
+.search-users-profile-name {
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+}
+
+.search-users-profile-name img {
+    cursor: pointer;
+}
+
+.search-users-profile-name span {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #ffa800;
+    font-size: 24px;
+    justify-content: center;
+}
+
+.search-users-profile-name span:hover {
+    max-height: 100px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #00b2ff;
+    font-size: 24px;
+}
+
+.search-users-profile-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.search-users-profile-list-pic img{
+    display: flex;
+    flex-direction: column;
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+    max-height: 100px; 
+    max-width: 100px; 
+    border-radius: 50%;
+    margin: 15px;
+    margin-right: 0px;
+}
+
+.search-users-profile-list-name span {
+    display: flex;
+    flex-direction: column;
+    width: 100%; 
+    height: 100%;
+    margin: 15px;
+}
+
+.board-photos {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    max-width: 100%;
+    height: auto;
+    justify-content: center;
+}
+
+.board-photos img{
+    background-size: cover;
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: 350px;
+    height: 350px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+hr.search-users-line {
+    width: 100%;
+}
