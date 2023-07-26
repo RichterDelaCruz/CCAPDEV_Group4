@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    // <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="stylesheet" href="/css/homepage.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -102,31 +102,44 @@
                     <!-- Make the post content clickable and link to the specific post page -->
 
                     <p>
-                        <span id="likesCount_<%= post._id %>">
-                          <%= post.likes.length %>
-                        </span>
+                        <i id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up fa-2x"></i>
+
                         <!-- Use the postId to make the id attribute unique -->
-                        <i id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up"></i>
-                      </p>
-                    
-            
-                    <!-- Display comments for this post if available -->
-                    <% if (post.comments && post.comments.length > 0) { %>
-                        <% for (let i = 0; i < Math.min(2, post.comments.length); i++) { %>
-                            <div>
-                                <p><strong>
-                                    <%= post.comments[i].username %>:
-                                    </strong>
+                        
+                    </p>
+                        <span id="likesCount_<%= post._id %>">
+                          <%= post.likes.length %> like
+                        </span>
+
+                        <div class="comments-section">
+                            <!-- Display comments for this post if available -->
+                            <% if (post.comments && post.comments.length > 0) { %>
+                              <% for (let i = 0; i < Math.min(2, post.comments.length); i++) { %>
+                                <div class="comment">
+                                  <div class="comment-profile-pic">
+                                    <a href="/profile/<%= post.comments[i].user_id %>"><img src="<%= post.comments[i].profilePicture %>" alt="Commenter Profile Picture"></a>
+                                  </div>
+                                  <div class="comment-content">
+                                    <p>
+                                      <strong><%= post.comments[i].username %></strong>
+                                      <time><%= new Date(post.comments[i].timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></time>
+                                    </p>
+                          
                                     <%= post.comments[i].content %>
-                                </p>
-                            </div>
-                        <% } %>
-                        <% if (post.comments.length > 2) { %>
-                            <p><em>Show more comments...</em></p>
-                        <% } %>
-                    <% } else { %>
-                        <p>No comments for this post.</p>
-                    <% } %>
+                          
+                                  </div>
+                                </div>
+                              <% } %>
+                          
+                              <% if (post.comments.length > 2) { %>
+                                <p><em>Show more comments...</em></p>
+                              <% } %>
+                          
+                            <% } else { %>
+                              <p>No comments for this post.</p>
+                            <% } %>
+                          </div>
+
                 </div>
                 <% }); %>
             
