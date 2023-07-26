@@ -9,6 +9,7 @@ body {
 
 div.container {
     display: flex;
+    justify-content: center;
 }
 
 a.fill-div {
@@ -127,7 +128,10 @@ nav img {
 
 
 .left-container {
-    width: 30%;
+    display: flex;
+    
+    width: 20%;
+    flex-direction: column;
     margin: 0 15px 0 45px;
 }
 
@@ -140,6 +144,8 @@ nav img {
 
 .profile .profile-name {
     display: flex;
+    justify-content: center;
+    flex-direction: column;
     align-items: center;
 }
 
@@ -148,6 +154,11 @@ nav img {
     border-radius: 50%;
     margin: 15px;
     cursor: pointer;
+    /* Apply a circular mask to the image */
+    object-fit: cover;
+    object-position: center center;
+    width: 100px;
+    height: 100px;
 }
 
 .profile .profile-name span {
@@ -210,23 +221,27 @@ nav img {
     font-weight: 700;
 }
 
-.create-board {
+.changeProfilePic {
+    display: flex;
+    flex-direction: column  ;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     padding: 40px;
     margin: 0 0 30px 0;
 }
 
-.create-board span {
+.changeProfilePic span {
     font-weight: 800;
 }
 
-.create-board .board-button {
+.changeProfilePic .change-button {
     border: 0px;
     background-color: white;
     color: #737373;
 }
 
-.create-board .board-button:hover {
+.changeProfilePic .change-button:hover {
     border: 0px;
     background-color: white;
     color: #00b2ff;
@@ -235,69 +250,6 @@ nav img {
 .middle-container {
     width: 40%;
     margin: 0 15px;
-}
-
-.homepage-buttons {
-    margin: 0 0 30px 0;
-    padding: 0px;
-    display: flex;
-}
-
-.homepage-buttons .buttons {
-    background-color: white;
-    color: #737373;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    width: 25%;
-    cursor: pointer;
-    margin: 0 5px 0 0;
-    padding: 10px 10px;
-}
-
-.homepage-buttons .buttons:hover{
-    background-color: #ff8a00;
-    color: white;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    width: 25%;
-    cursor: pointer;
-    padding: 10px 10px;
-}
-
-.homepage-buttons .rightside-buttons {
-    background-color: white;
-    color: #737373;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    width: 25%;
-    cursor: pointer;
-    padding: 10px 10px;
-}
-
-.homepage-buttons .rightside-buttons:hover{
-    background-color: #ff8a00;
-    color: white;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
-    width: 25%;
-    cursor: pointer;
-    padding: 10px 10px;
 }
 
 .profile-page {
@@ -485,8 +437,9 @@ nav img {
 }
 
 .right-container {
-    width: 30%;
+    width: 50%;
     margin: 0 40px 0 15px;
+    flex-direction: column;
 }
 
 .create-pin {
@@ -791,3 +744,238 @@ nav img {
 .reply button:hover {
     background-color: #45a049;
 }
+
+.homebutton {
+    color: #737373 !important;
+    font-size: 16px;
+    padding: 10px 10px;
+    border-radius: 20px;
+    border: 0px;
+    background: #ffffff;
+  }
+  .homebutton:hover {
+    color: #FFFFFF !important;
+    background: #FF8A00;
+  }
+
+  input[type="file"] {
+    border: 1px solid #555;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 0.2em;
+  }
+
+  input[type="file"]::file-selector-button {
+    max-width: 100%;
+    color: #FFFFFF !important;
+    margin: 5px;
+    border: 0px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    border-radius: 0.2em;
+    background-color: #D9D9D9;
+    border: 1px solid #555; 
+  }
+  
+  input[type="file"]::-ms-browse:hover {
+
+    background-color: #FF8A00;
+    border: 5px;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button:hover {
+
+    background-color: #FF8A00;
+    border: 5px;
+  }
+  
+  input[type="file"]::file-selector-button:hover {
+
+    background-color: #FF8A00;
+    border: 5px;
+  }
+
+/* Hide the original submit button text */
+.hidden-submit-button {
+
+    color: transparent;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+/* Style the custom submit button */
+.custom-submit-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.custom-submit-button {
+    max-width: 100%;
+    margin-top: 5px;
+    background: #D9D9D9;
+    border-radius: 0.2em;
+    color: #fff;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+}
+
+.custom-submit-button:hover {
+    color: #FFFFFF;
+    background: #FF8A00;
+}
+
+.create-post-container {
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 98%;
+    height: 40px;
+    background-color: #F0F2F5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.button-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.photo-button {
+    background-color: #FF8A00;
+    color: #ffffff;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.photo-button:hover {
+    background-color: #ffffff;
+    color: #ffa800;
+}
+
+#photo-upload {
+    display: none;
+}
+
+.submit-button {
+    background-color: #D9D9D9;
+    color: #ffffff;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 0;
+}
+
+.submit-button:hover {
+    background-color: #FF8A00;
+}
+
+
+/* Your existing CSS styles */
+
+.post-container {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.post-container a {
+    text-decoration: none;
+    color: #000;
+}
+
+.post-container p {
+    margin-bottom: 10px;
+}
+
+.post-container img {
+    max-width: 100%;
+}
+
+.post-container .username-post {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.post-container .username-post span {
+    /* Remove max-height and border-radius properties */
+    margin: 10px;
+    font-weight: 800;
+    color: #ffa800;
+}
+
+.post-container .username-post img {
+    max-height: 50px;
+    border-radius: 50%;
+}
+
+.post-container .timestamp {
+    margin-left: 10px;
+    color: #888;
+    font-size: 14px;
+    font-weight: 0;
+}
+
+.post-container .caption {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+
+.post-container .like-icon {
+    color: gray; /* Default color for the thumbs-up icon */
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.post-container .like-icon.liked {
+    color: orange; /* Color for the thumbs-up icon when liked */
+}
+
+
+
+
+.post-container .like-count,
+.post-container .comment-count {
+    color: #888;
+    font-size: 14px;
+}
+
+.post-container .like-count {
+    margin-right: 10px;
+}
+
+/* Your existing CSS styles */
+
+
