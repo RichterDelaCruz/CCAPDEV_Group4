@@ -178,6 +178,7 @@ app.get('/homepage', async (req, res) => {
       for (const comment of comments) {
         const commentUser = await User.findById(comment.user_id).exec();
         comment.username = commentUser.username; // Add the 'username' field to the comment
+        comment.profilePicture = commentUser.profilePicture; // Add the 'profilePicture' field to the comment
       }
 
       post.comments = comments;
