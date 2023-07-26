@@ -910,7 +910,7 @@ input[type="text"] {
 
 .post-container a {
     text-decoration: none;
-    color: #000;
+    color: #888;
 }
 
 .post-container p {
@@ -983,12 +983,12 @@ input[type="text"] {
 
   /* Orange color */
   #likeButton:not(.liked) {
-    color: #FFA500;
+    color: #888;
   }
 
   /* Darker orange color when liked */
   #likeButton.liked {
-    color: #FF4500;
+    color: #FFA500;
   }
 
 /* General styling for the post detail container */
@@ -1124,4 +1124,3 @@ input[type="text"] {
 }
 
 /* Add any additional styling as needed */
-
