@@ -977,5 +977,18 @@ input[type="text"] {
 }
 
 /* Your existing CSS styles */
+#likeButton {
+    cursor: pointer;
+  }
+
+  /* Orange color */
+  #likeButton:not(.liked) {
+    color: #FFA500;
+  }
+
+  /* Darker orange color when liked */
+  #likeButton.liked {
+    color: #FF4500;
+  }
 
 

@@ -5,13 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/css/homepage.css">
+    // <link rel="stylesheet" href="/css/homepage.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <title>Homepage</title>
+<style>
+  .fa-thumbs-up.liked {
+    color: #FFA500;
+  }
 
+  /* Black color when not liked */
+  .fa-thumbs-up:not(.liked) {
+    color: #000;
+  }
+</style>
 </head>
 
 <body>
@@ -47,7 +56,7 @@
             <div class="changeProfilePic">
                 <span>Change Profile Picture</span>
                 <form method="POST" action="/homepage" enctype="multipart/form-data">
-                    <input type="file" name="image"/>
+                    <input type="file" name="image" accept="image/*">
                     <div class="custom-submit-button-wrapper">
                         <input type="submit" value="Change Profile Picture" class="hidden-submit-button">
                         <label for="hidden-submit-button" class="custom-submit-button">Upload Picture</label>
@@ -93,18 +102,12 @@
                     <!-- Make the post content clickable and link to the specific post page -->
 
                     <p>
-                        <span onclick="toggleLike('<%= post._id %>, <%= post.isLiked %>')">
-                            <!-- Use the Font Awesome thumbs-up icon class directly -->
-                            <% if (post.isLiked) { %>
-                                <i class="like-icon"></i>
-                            <% } else { %>
-                                <i class="fas fa-thumbs-up"></i>
-                            <% } %>
+                        <span id="likesCount_<%= post._id %>">
+                          <%= post.likes.length %>
                         </span>
-                        <span class="like-count" id="likesCount_<%= post._id %>">
-                            <%= post.likes.length %>
-                        </span>
-                    </p>
+                        <!-- Use the postId to make the id attribute unique -->
+                        <i id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up"></i>
+                      </p>
                     
             
                     <!-- Display comments for this post if available -->
@@ -130,87 +133,41 @@
             
         </div>
     </div>
-
-                <!-- Display all posts -->
-                <% posts.forEach((post)=> { %>
-                    <div>
-                        <!-- Make the post content clickable and link to the specific post page -->
-                        <a href="/post/<%= post._id %>">
-                            <p style="color: orange;"><strong>
-                                    <img src="<%= post.user_id.profilePicture %>" style="max-width: 100px;">
-
-                                    <%= post.username %>:
-                                </strong>
-                                <%= post.content %>
-                                    <%= post.timestamp %>
-                            </p>
-                            <% if (post.photo) { %>
-                                <img src="<%= post.photo %>" alt="Post Photo" style="max-width: 100px;">
-                                <% } %>
-                        </a>
-                        <p>
-                            <strong>Likes:</strong>
-                            <span id="likesCount_<%= post._id %>">
-                                <%= post.likes.length %>
-                            </span>
-                            <button id="likeButton_<%= post._id %>"
-                                onclick="toggleLike('<%= post._id %>')">Like</button>
-                        </p>
-
-                        <!-- Display comments for this post if available -->
-                        <% if (post.comments && post.comments.length> 0) { %>
-                            <% for (let i=0; i < Math.min(2, post.comments.length); i++) { %>
-                                <div>
-
-                                    <p><strong>
-                                            <%= post.comments[i].username %>:
-                                        </strong>
-                                        <%= post.comments[i].content %>
-                                    </p>
-                                </div>
-                                <% } %>
-                                    <% if (post.comments.length> 2) { %>
-                                        <p><em>Show more comments...</em></p>
-                                        <% } %>
-                                            <% } else { %>
-                                                <p>No comments for this post.</p>
-                                                <% } %>
-                    </div>
-                    <% }); %>
-
-                        <script>
-
-                            // like.js
-                            function toggleLike(postId) {
-                                const likesCountElement = document.getElementById(`likesCount_${postId}`);
-                                const likeButton = document.getElementById(`likeButton_${postId}`);
-                                const currentLikes = parseInt(likesCountElement.innerText);
-                                
-                                // Make a POST request to the server to toggle the like
-                                fetch('/toggle-like', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ postId }),
-                                })
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        // Update the like count on the page
-                                        likesCountElement.innerText = data.likesCount;
-                                        // Toggle the text of the button between "Like" and "Unlike"
-                                        likeButton.innerText = data.isLiked ? 'Unlike' : 'Like';
-                                        // Change the color of the thumbs-up icon based on like/unlike status
-                                        const likeIcon = document.querySelector(`#likeButton_${postId} i`);
-                                        likeIcon.classList.toggle('liked', data.isLiked);
-                                    })
-                                    .catch((error) => {
-                                        console.error('Error toggling like:', error);
-                                    });
-                            }
-
-
-                        </script>
+                    <script>
+                        // like.js
+                        document.addEventListener('DOMContentLoaded', () => {
+                          // Loop through all like buttons to set their initial colors
+                          <% posts.forEach((post) => { %>
+                            const likeButton_<%= post._id %> = document.getElementById(`likeButton_<%= post._id %>`);
+                            likeButton_<%= post._id %>.classList.toggle('liked', <%= post.likes.includes(currentUser._id) %>);
+                          <% }); %>
+                        });
+                      
+                        function toggleLike(postId) {
+                          const likesCountElement = document.getElementById(`likesCount_${postId}`);
+                          const likeButton = document.getElementById(`likeButton_${postId}`);
+                          const currentLikes = parseInt(likesCountElement.innerText);
+                      
+                          // Make a POST request to the server to toggle the like
+                          fetch('/toggle-like', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ postId }),
+                          })
+                            .then((response) => response.json())
+                            .then((data) => {
+                              // Update the like count on the page
+                              likesCountElement.innerText = data.likesCount;
+                              // Toggle the color of the thumbs-up icon based on like/unlike status
+                              likeButton.classList.toggle('liked', data.isLiked);
+                            })
+                            .catch((error) => {
+                              console.error('Error toggling like:', error);
+                            });
+                        }
+                      </script>
                         
 </body>
 
