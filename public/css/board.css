@@ -33,6 +33,17 @@ div.board-container {
     margin-bottom: 75px;
 }
 
+.board-profile-name .board-username {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-profile-name .board-username span{
+    padding: 10px;
+}
+
 .board-profile-name {
     display: flex;
     justify-content: center;
@@ -81,3 +92,14 @@ div.board-container {
     margin-bottom: 10px;
 }
 
+.follow-numbers {
+    display: flex;
+    flex-direction: row;
+    font-weight: 800;
+    color: rgb(142, 142, 142);
+    
+}
+
+.follow-numbers p{
+    padding: 10px;
+}

@@ -1123,4 +1123,14 @@ input[type="text"] {
     color: #888;
 }
 
-/* Add any additional styling as needed */
+.follow-numbers {
+    display: flex;
+    flex-direction: row;
+    font-weight: 800;
+    color: rgb(142, 142, 142);
+    
+}
+
+.follow-numbers p{
+    padding: 10px;
+}

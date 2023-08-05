@@ -25,6 +25,14 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Post'
     }],
+    following: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 });
 
 // Create and export the 'User' model

@@ -14,44 +14,70 @@
         <a href="/homepage"><img src="/images/logo.png"></a>
 
         <ul class="nav-menu">
-            <li><a href="/homepage"><button class="homebutton" >Homepage</button></a></li>
-            <li><a href="/users"><button class="homebutton" >Search Users</button></a></li>
-            <li><a href="/login"><button class="homebutton" >Log out</button></a></li>
+            <li><a href="/homepage"><button class="homebutton">Homepage</button></a></li>
+            <li><a href="/users"><button class="homebutton">Search Users</button></a></li>
+            <li><a href="/login"><button class="homebutton">Log out</button></a></li>
             </h1>
         </ul>
     </nav>
 
     <div class="board-container">
-    <div class="board-contents" style="cursor: pointer;">
-    
+        <div class="board-contents" style="cursor: pointer;">
 
-    <div class="board-profile">
-    <!-- Display the profile picture if it exists -->
-    <div class="board-profile-name">
-    <% if (user.profilePicture) { %>
-        <img src="<%= user.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
-        <% } else { %>
-            <!-- Display a default profile picture if the user has not uploaded a custom picture -->
-            <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture" style="max-width: 100px;">
-            <p>No profile picture uploaded.</p>
-            <% } %>
-        <span>@<%= user.username %></span>
-    </div>
-    </div>
-    
-    
-<div class="board-photos">
-<% posts.forEach((post) => { %>
-        <div>
-            <a href="/post/<%= post._id %>">
-                <% if (post.photo) { %>
-                    <img src="<%= post.photo %>" alt="Post Photo">
-                <% } %>
-            </a>
+
+            <div class="board-profile">
+                <!-- Display the profile picture if it exists -->
+                <div class="board-profile-name">
+                    <% if (user.profilePicture) { %>
+                        <img src="<%= user.profilePicture %>" alt="Profile Picture" style="max-width: 100px;">
+                        <% } else { %>
+                            <!-- Display a default profile picture if the user has not uploaded a custom picture -->
+                            <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture"
+                                style="max-width: 100px;">
+                            <p>No profile picture uploaded.</p>
+                            <% } %>
+                            <div class = "board-username">
+                                <div>
+                                    <span>@<%= user.username %></span>
+                                </div>
+                                <div>
+                                    <form id="followForm" action="/<%= currentUser.following.map(String).includes(String(user._id)) ? 'unfollow' : 'follow' %>/<%= user._id %>" method="POST">
+                                        <% if (currentUser._id.toString() === user._id.toString()) { %>
+                                            <!-- Display a message or any other content when the user is the same as the currentUser -->
+                                            <p>This is your profile.</p>
+                                        <% } else if (currentUser.following.map(String).includes(String(user._id))) { %>
+                                            <!-- Display the unfollow button when the user is not the currentUser and is being followed -->
+                                            <button type="submit" name="follow" value="unfollow" class="photo-button">Unfollow</button>
+                                        <% } else { %>
+                                            <!-- Display the follow button when the user is not the currentUser and is not being followed -->
+                                            <button type="submit" name="follow" value="follow" class="photo-button">Follow</button>
+                                        <% } %>
+                                    </form>
+                                </div>  
+                            </div>
+                            <div class = "follow-numbers">
+                                <p>Followers: <%= user.followers.length %></p>
+                                <p>Following: <%= user.following.length %></p>
+                            </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="board-photos">
+                <% posts.forEach((post)=> { %>
+                    <div>
+                        <a href="/post/<%= post._id %>">
+                            <% if (post.photo) { %>
+                                <img src="<%= post.photo %>" alt="Post Photo">
+                                <% } %>
+                        </a>
+                    </div>
+                    <% }); %>
+            </div>
         </div>
-    <% }); %>
-    </div>
-    </div>
     </div>
 </body>
+
 </html>
