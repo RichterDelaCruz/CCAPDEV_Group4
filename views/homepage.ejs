@@ -2,190 +2,202 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/css/homepage.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <title>Homepage</title>
-<style>
-  .fa-thumbs-up.liked {
-    color: #FFA500;
-  }
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  /* Black color when not liked */
-  .fa-thumbs-up:not(.liked) {
-    color: #000;
-  }
-</style>
+  <title>Homepage</title>
+  <style>
+    .fa-thumbs-up.liked {
+      color: #FFA500;
+    }
+
+    /* Black color when not liked */
+    .fa-thumbs-up:not(.liked) {
+      color: #000;
+    }
+  </style>
 </head>
 
 <body>
-    <nav>
-        <a href="/homepage"><img src="/images/logo.png"></a>
+  <nav>
+    <a href="/homepage"><img src="/images/logo.png"></a>
 
-        <ul class="nav-menu">
-            <li><a href="/homepage"><button class="homebutton" >Homepage</button></a></li>
-            <li><a href="/users"><button class="homebutton" >Search Users</button></a></li>
-            <li><a href="/login"><button class="homebutton" >Log out</button></a></li>
-            </h1>
-        </ul>
-    </nav>
-    
-    <!--<h1>Welcome, <%= currentUser.username %>!</h1>
+    <ul class="nav-menu">
+      <li><a href="/homepage"><button class="homebutton">Homepage</button></a></li>
+      <li><a href="/users"><button class="homebutton">Search Users</button></a></li>
+      <li><a href="/login"><button class="homebutton">Log out</button></a></li>
+      </h1>
+    </ul>
+  </nav>
+
+  <!--<h1>Welcome, <%= currentUser.username %>!</h1>
 
      Display the profile picture if it exists -->
-    <div class="container">
-        <div class="left-container">
-            <div class="profile">
-                <div class="profile-name">
-                    <% if (currentUser.profilePicture) { %>
-                        <img src="<%= currentUser.profilePicture %>" alt="Profile Picture">
-                        <span><a href = "/profile/" + <%= currentUser.user_id %>> <%= currentUser.username %> </a></span>
-                        <% } else { %>
-                            <!-- Display a default profile picture if the user has not uploaded a custom picture -->
-                            <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
-                            <p>No profile picture uploaded.</p>
-                            <span><a href = "/profile/" + <%= currentUser.user_id %>> <%= currentUser.username %> </a></span>
-                            <% } %>
-                </div>
-                <div class = "follow-numbers">
-                  <p>Followers: <%= currentUser.followers.length %></p>
-                  <p>Following: <%= currentUser.following.length %></p>
-              </div>   
-            </div>
-            <div class="changeProfilePic">
-                <span>Change Profile Picture</span>
-                <form method="POST" action="/homepage" enctype="multipart/form-data">
-                    <input type="file" name="image" accept="image/*">
-                    <div class="custom-submit-button-wrapper">
-                        <input type="submit" value="Change Profile Picture" class="hidden-submit-button">
-                        <label for="hidden-submit-button" class="custom-submit-button">Upload Picture</label>
-                    </div>
-                </form>
-            </div>
+  <div class="container">
+    <div class="left-container">
+      <div class="profile">
+        <div class="profile-name">
+          <% if (currentUser.profilePicture) { %>
+            <img src="<%= currentUser.profilePicture %>" alt="Profile Picture">
+            <span><a href="/profile/" + <%=currentUser.user_id %>> <%= currentUser.username %> </a></span>
+            <% } else { %>
+              <!-- Display a default profile picture if the user has not uploaded a custom picture -->
+              <img src="/images/default-profile-picture.jpg" alt="Default Profile Picture">
+              <p>No profile picture uploaded.</p>
+              <span><a href="/profile/" + <%=currentUser.user_id %>> <%= currentUser.username %> </a></span>
+              <% } %>
         </div>
-        <div class="right-container">
-            <div class="create-post-container">
-                <form method="POST" action="/create-post" enctype="multipart/form-data">
-                    <input type="text" name="content" id="content">
-                    <div class="button-wrapper">
-                        <label for="photo-upload" class="photo-button">Upload Photo</label>
-                        <input type="file" id="photo-upload" accept="image/*" name="photo">
-                        <input type="submit" value="Create Post" class="submit-button">
-                    </div>
-                    
-                </form>
-            </div>
-
-            <% posts.forEach((post)=> { %>
-                <div class="post-container">
-                    <div class="username-post">
-                        <a href="/post/<%= post._id %>"><img src="<%= post.user_id.profilePicture %>"></a>
-                            <div>
-                                <span href = "/profile/" + <%= post.user_id %>> <%= post.username %></span>
-                                <div class="timestamp"><%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></div>
-                            </div>
-                            
-                    </div>
-                    <div class="caption">
-
-                        <%= post.content %>
-                        
-                    </div>
-
-                    <a href="/post/<%= post._id %>">
-                    <% if (post.photo) { %>
-                            <img src="<%= post.photo %>" alt="Post Photo">
-                        <% } %>
-                    </a>
-
-                    <!-- Make the post content clickable and link to the specific post page -->
-
-                    <p>
-                        <i id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')" class="fa fa-thumbs-up fa-2x"></i>
-
-                        <!-- Use the postId to make the id attribute unique -->
-                        
-                    </p>
-                        <span id="likesCount_<%= post._id %>">
-                          <%= post.likes.length %> like
-                        </span>
-
-                        <div class="comments-section">
-                            <!-- Display comments for this post if available -->
-                            <% if (post.comments && post.comments.length > 0) { %>
-                              <% for (let i = 0; i < Math.min(2, post.comments.length); i++) { %>
-                                <div class="comment">
-                                <div class="comment-profile-pic">
-                                    <a href="/profile/<%= post.comments[i].user_id %>"><img src="<%= post.comments[i].profilePicture %>" alt="Commenter Profile Picture"></a>
-                                  </div>
-                                  <div class="comment-content">
-                                    <p>
-                                      <strong><%= post.comments[i].username %></strong>
-                                      <time><%= new Date(post.comments[i].timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></time>
-                                    </p>
-                          
-                                    <%= post.comments[i].content %>
-                          
-                                  </div>
-                                </div>
-                              <% } %>
-                          
-                              <% if (post.comments.length > 2) { %>
-                                <p><em>Show more comments...</em></p>
-                              <% } %>
-                          
-                            <% } else { %>
-                              <p>No comments for this post.</p>
-                            <% } %>
-                          </div>
-
-                </div>
-                <% }); %>
-            
-            
+        <div class="follow-numbers">
+          <p>Followers: <%= currentUser.followers.length %>
+          </p>
+          <p>Following: <%= currentUser.following.length %>
+          </p>
         </div>
+      </div>
+      <div class="changeProfilePic">
+        <span>Change Profile Picture</span>
+        <form method="POST" action="/homepage" enctype="multipart/form-data">
+          <input type="file" name="image" accept="image/*">
+          <div class="custom-submit-button-wrapper">
+            <input type="submit" value="Change Profile Picture" class="hidden-submit-button">
+            <label for="hidden-submit-button" class="custom-submit-button">Upload Picture</label>
+          </div>
+        </form>
+      </div>
     </div>
-                    <script>
-                        // like.js
-                        document.addEventListener('DOMContentLoaded', () => {
+    <div class="right-container">
+      <div class="create-post-container">
+        <form method="POST" action="/create-post" enctype="multipart/form-data">
+          <input type="text" name="content" id="content">
+          <div class="button-wrapper">
+            <label for="photo-upload" class="photo-button">Upload Photo</label>
+            <input type="file" id="photo-upload" accept="image/*" name="photo">
+            <input type="submit" value="Create Post" class="submit-button">
+          </div>
+
+        </form>
+      </div>
+
+      <% posts.forEach((post)=> { %>
+        <div class="post-container">
+          <div class="username-post">
+            <a href="/post/<%= post._id %>"><img src="<%= post.user_id.profilePicture %>"></a>
+            <div>
+              <span href="/profile/" + <%=post.user_id %>> <%= post.username %></span>
+              <div class="timestamp">
+                <%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric' , month: 'short' ,
+                  day: 'numeric' }) %>
+              </div>
+            </div>
+
+          </div>
+          <div class="caption">
+
+            <%= post.content %>
+
+          </div>
+
+          <a href="/post/<%= post._id %>">
+            <% if (post.photo) { %>
+              <img src="<%= post.photo %>" alt="Post Photo">
+              <% } %>
+          </a>
+
+          <!-- Make the post content clickable and link to the specific post page -->
+
+          <p>
+            <i id="likeButton_<%= post._id %>" onclick="toggleLike('<%= post._id %>')"
+              class="fa fa-thumbs-up fa-2x"></i>
+
+            <!-- Use the postId to make the id attribute unique -->
+
+          </p>
+          <span id="likesCount_<%= post._id %>">
+            <%= post.likes.length %> like
+          </span>
+
+          <div class="comments-section">
+            <!-- Display comments for this post if available -->
+            <% if (post.comments && post.comments.length> 0) { %>
+              <% for (let i=0; i < Math.min(2, post.comments.length); i++) { %>
+                <div class="comment">
+                  <div class="comment-profile-pic">
+                    <a href="/profile/<%= post.comments[i].user_id %>"><img src="<%= post.comments[i].profilePicture %>"
+                        alt="Commenter Profile Picture"></a>
+                  </div>
+                  <div class="comment-content">
+                    <p>
+                      <strong>
+                        <%= post.comments[i].username %>
+                      </strong>
+                      <time>
+                        <%= new Date(post.comments[i].timestamp).toLocaleDateString(undefined, { year: 'numeric' ,
+                          month: 'short' , day: 'numeric' }) %>
+                      </time>
+                    </p>
+
+                    <%= post.comments[i].content %>
+
+                  </div>
+                </div>
+                <% } %>
+
+                  <% if (post.comments.length> 2) { %>
+                    <p><em>Show more comments...</em></p>
+                    <% } %>
+
+                      <% } else { %>
+                        <p>No comments for this post.</p>
+                        <% } %>
+          </div>
+
+        </div>
+        <% }); %>
+
+
+    </div>
+  </div>
+  <script>
+    // like.js
+    document.addEventListener('DOMContentLoaded', () => {
                           // Loop through all like buttons to set their initial colors
                           <% posts.forEach((post) => { %>
                             const likeButton_<%= post._id %> = document.getElementById(`likeButton_<%= post._id %>`);
-                            likeButton_<%= post._id %>.classList.toggle('liked', <%= post.likes.includes(currentUser._id) %>);
+      likeButton_ <%= post._id %>.classList.toggle('liked', <%= post.likes.includes(currentUser._id) %>);
                           <% }); %>
                         });
-                      
-                        function toggleLike(postId) {
-                          const likesCountElement = document.getElementById(`likesCount_${postId}`);
-                          const likeButton = document.getElementById(`likeButton_${postId}`);
-                          const currentLikes = parseInt(likesCountElement.innerText);
-                      
-                          // Make a POST request to the server to toggle the like
-                          fetch('/toggle-like', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ postId }),
-                          })
-                            .then((response) => response.json())
-                            .then((data) => {
-                              // Update the like count on the page
-                              likesCountElement.innerText = data.likesCount;
-                              // Toggle the color of the thumbs-up icon based on like/unlike status
-                              likeButton.classList.toggle('liked', data.isLiked);
-                            })
-                            .catch((error) => {
-                              console.error('Error toggling like:', error);
-                            });
-                        }
-                      </script>
-                        
+
+    function toggleLike(postId) {
+      const likesCountElement = document.getElementById(`likesCount_${postId}`);
+      const likeButton = document.getElementById(`likeButton_${postId}`);
+      const currentLikes = parseInt(likesCountElement.innerText);
+
+      // Make a POST request to the server to toggle the like
+      fetch('/toggle-like', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Update the like count on the page
+          likesCountElement.innerText = data.likesCount;
+          // Toggle the color of the thumbs-up icon based on like/unlike status
+          likeButton.classList.toggle('liked', data.isLiked);
+        })
+        .catch((error) => {
+          console.error('Error toggling like:', error);
+        });
+    }
+  </script>
+
 </body>
 
 </html>

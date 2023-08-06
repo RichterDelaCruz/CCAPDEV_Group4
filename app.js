@@ -451,7 +451,7 @@ app.get('/post/:postId', async (req, res) => {
     // Check if the post with the provided postId exists
     if (post) {
       // Render the 'post.ejs' template and pass the post data to it
-      res.render('post', { post });
+      res.render('post', { post, currentUser: req.session.user });
     } else {
       // If the post doesn't exist, redirect to the list of all posts
       res.redirect('/posts');
@@ -561,3 +561,23 @@ app.post('/toggle-like', async (req, res) => {
   }
 });
 
+app.delete('/comments/:commentId', async (req, res) => {
+  const commentId = req.params.commentId;
+
+  try {
+    // Use Mongoose to find and delete the comment by its _id
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
+
+    if (!deletedComment) {
+      // If the comment with the provided commentId is not found, respond with an error message
+      return res.status(404).send(`Comment with ID ${commentId} not found.`);
+    }
+
+    // Respond with a success message or appropriate response
+    res.send(`Comment with ID ${commentId} deleted successfully.`);
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    // Handle the error appropriately
+    res.status(500).send('Internal Server Error');
+  }
+});
