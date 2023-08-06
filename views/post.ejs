@@ -85,6 +85,13 @@
 
                 <%= comment.content %>
               </div>
+              <% if (currentUser._id.toString() === comment.user_id._id.toString()) { %>
+                <div class="delete-container">
+                  <button onclick="deleteComment('<%= comment._id %>')">
+                    <i class="fas fa-trash"></i> <!-- Font Awesome trash icon -->
+                  </button>
+                </div>
+              <% } %>
             </div>
             <% }); %>
               <% } else { %>
@@ -96,6 +103,26 @@
 
   </div>
   <script>
+    function deleteComment(commentId) {
+    // Make a DELETE request to the server to delete the comment
+    fetch(`/comment/${commentId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // If the comment was successfully deleted, remove the comment element from the DOM
+          const commentElement = document.getElementById(`comment_${commentId}`);
+          commentElement.remove();
+        } else {
+          // Handle the case where the comment could not be deleted
+          console.error('Error deleting comment:', data.error);
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting comment:', error);
+      });
+  }
     document.addEventListener('DOMContentLoaded', () => {
       // Get the post ID
       const postId = '<%= post._id %>';

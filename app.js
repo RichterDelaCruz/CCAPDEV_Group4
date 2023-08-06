@@ -451,7 +451,7 @@ app.get('/post/:postId', async (req, res) => {
     // Check if the post with the provided postId exists
     if (post) {
       // Render the 'post.ejs' template and pass the post data to it
-      res.render('post', { post });
+      res.render('post', { post, currentUser: req.session.user});
     } else {
       // If the post doesn't exist, redirect to the list of all posts
       res.redirect('/posts');

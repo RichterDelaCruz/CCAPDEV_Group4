@@ -1134,3 +1134,26 @@ input[type="text"] {
 .follow-numbers p{
     padding: 10px;
 }
+
+
+.delete-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+  }
+  
+  .delete-container button {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  
+  /* Add hover styles for the delete button */
+  .delete-container button:hover {
+    color: #FFA500; /* Change the text color to dark red when hovered */
+  }
+  
+  
