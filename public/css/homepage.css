@@ -1088,6 +1088,7 @@ input[type="text"] {
 /* Styling for the comments section */
 .comments-section {
     margin-top: 20px;
+    width: 100%;
 }
 
 .comment {
@@ -1105,6 +1106,7 @@ input[type="text"] {
 .comment-content {
     padding: 0;
     overflow: hidden;
+    width: 100%;
 }
 
 .comment-content p {
@@ -1136,24 +1138,34 @@ input[type="text"] {
 }
 
 
-.delete-container {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-  }
-  
-  .delete-container button {
-    background: none;
+/* Customize the garbage-button class */
+.garbage-button {
+    background-color: transparent;
     border: none;
     color: #888;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     margin-left: 5px;
+    margin-left: auto;
   }
   
-  /* Add hover styles for the delete button */
-  .delete-container button:hover {
-    color: #FFA500; /* Change the text color to dark red when hovered */
+  /* Add hover styles for the garbage-button class */
+  .garbage-button:hover {
+    color: #ffa800;
   }
   
   
+  .user-info-like-container {
+    display: flex;
+    flex-direction: column;
+    /* Add your desired dimensions here, you can use width and height properties */
+    width: 30%;
+    max-width: 500px; /* Example: Set a maximum width */
+    /* If you want to make it adjustable vertically, you can use the height property */
+    height: auto; /* Set height to 'auto' to adjust based on content */
+    /* Add padding or margins if needed */
+    padding: 10px;
+    margin: 10px;
+    /* Add other custom styles as needed */
+    align-items: flex-start;
+  }

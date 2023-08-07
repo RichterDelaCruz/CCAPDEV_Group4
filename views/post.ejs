@@ -92,13 +92,6 @@
 
                 <%= comment.content %>
               </div>
-              <% if (currentUser._id.toString() === comment.user_id._id.toString()) { %>
-                <div class="delete-container">
-                  <button onclick="deleteComment('<%= comment._id %>')">
-                    <i class="fas fa-trash"></i> <!-- Font Awesome trash icon -->
-                  </button>
-                </div>
-              <% } %>
             </div>
             <% }); %>
               <% } else { %>
