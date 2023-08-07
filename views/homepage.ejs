@@ -51,10 +51,12 @@
               <p>No profile picture uploaded.</p>
               <span><a href="/profile/" + <%=currentUser.user_id %>> <%= currentUser.username %> </a></span>
               <% } %>
-              <div class = "follow-numbers">
-                <p>Followers: <%= currentUser.followers.length %></p>
-                <p>Following: <%= currentUser.following.length %></p>
-            </div>
+        </div>
+        <div class="follow-numbers">
+          <p>Followers: <%= currentUser.followers.length %>
+          </p>
+          <p>Following: <%= currentUser.following.length %>
+          </p>
         </div>
       </div>
       <div class="changeProfilePic">

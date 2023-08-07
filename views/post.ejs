@@ -24,7 +24,7 @@
   </nav>
 
   <!--<h1>Post Details</h1>-->
-
+  
   <div class="post-detail-container">
     <div class="post-image-container">
       <!-- Display the post image -->
@@ -45,6 +45,7 @@
         <span href = "/profile/" + <%= post.user_id %>><%= post.user_id.username %></span>
         <div class="timestamp"><%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></div>
     </div>
+
     </div>
       <!-- Like button and Like count -->
       <div class="like-container">
@@ -81,7 +82,13 @@
                     <%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric' , month: 'short' ,
                       day: 'numeric' }) %>
                   </time>
+                  <% if (currentUser._id.toString() === comment.user_id._id.toString()) { %>
+                    <button class="garbage-button" onclick="logCommentId('<%= comment._id %>')">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  <% } %>
                 </p>
+
 
                 <%= comment.content %>
               </div>
@@ -159,6 +166,27 @@
           console.error('Error toggling like:', error);
         });
     }
+
+    function logCommentId(commentId) {
+    console.log('Clicked garbage button for comment:', commentId);
+    // Send a DELETE request to the server to delete the comment
+    fetch(`/comments/${commentId}`, {
+      method: 'DELETE'
+    })
+      .then((response) => {
+        // Check the response status to see if the comment was successfully deleted
+        if (response.ok) {
+          location.reload();
+          console.log(`Comment with ID ${commentId} deleted successfully.`);
+          // Optionally, you can remove the deleted comment element from the page if needed
+        } else {
+          console.error(`Error deleting comment with ID ${commentId}.`);
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting comment:', error);
+      });
+  }
   </script>
 </body>
 
