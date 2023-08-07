@@ -43,6 +43,12 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
 
+
+// Redirect to the "/login" page when the root URL is accessed
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
 app.get('/homepage', async (req, res) => {
   try {
     if (!req.session.user) {
