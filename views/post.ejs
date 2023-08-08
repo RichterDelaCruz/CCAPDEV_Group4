@@ -46,6 +46,16 @@
         <div class="timestamp"><%= new Date(post.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></div>
     </div>
 
+    <div>
+      <div class="post-garbage-section">
+          <% if (post) { %>
+            <button class="post-garbage-button" onclick="deletePost('<%= post._id %>')" href="/homepage">
+              <i class="fas fa-trash"></i>
+            </button>
+          <% }; %>
+      </div>
+    </div>
+
     </div>
       <!-- Like button and Like count -->
       <div class="like-container">
@@ -180,6 +190,30 @@
         console.error('Error deleting comment:', error);
       });
   }
+
+    function deletePost(post_id){
+      console.log('Clicked deletePost button for deletePost:', post_id);
+      fetch(`/posts/${post_id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ post_id: post_id }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+          if (data.success) {
+            // If the post was successfully deleted, redirect to the homepage
+            window.location.href = '/homepage';
+          } else {
+            // Handle the case where the post could not be deleted
+            console.error('Error deleting post:', data.error);
+          }
+        })
+      .catch((error) => {
+          console.error('Error deleting post:', error);
+        });
+    }
   </script>
 </body>
 

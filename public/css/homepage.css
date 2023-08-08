@@ -1169,3 +1169,25 @@ input[type="text"] {
     /* Add other custom styles as needed */
     align-items: flex-start;
   }
+
+  .post-garbage-button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+    margin-left: auto;
+  }
+  
+  /* Add hover styles for the garbage-button class */
+  .post-garbage-button:hover {
+    color: #ffa800;
+  }
+
+  .post-garbage-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }

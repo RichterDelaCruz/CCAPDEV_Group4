@@ -587,3 +587,64 @@ app.delete('/comments/:commentId', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.delete('/posts/:postId', async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+    // Use Mongoose to find and delete the post by its _id
+    const deletedPost = await Post.findByIdAndDelete(postId);
+
+    if (!deletedPost) {
+      // If the post with the provided postId is not found, respond with an error message
+      return res.status(404).send(`Post with ID ${postId} not found.`);
+    }
+
+    // Redirect the user to the homepage
+    res.redirect('/after-delete-homepage');
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    // Handle the error appropriately
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.delete('/after-delete-homepage', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      // If the user is not authenticated, redirect them to the login page
+      return res.redirect('/login');
+    }
+
+    // Retrieve the current user's data from the session
+    const currentUser = req.session.user;
+
+    // Retrieve all posts from the database
+    const posts = await Post.find().populate('user_id').exec();
+
+    // Fetch comments for each post and populate the 'user_id' field to access user data
+    for (const post of posts) {
+      const user = await User.findById(post.user_id).exec();
+
+      // Add the username of the post creator to each post
+      post.username = user.username;
+
+      const comments = await Comment.find({ post_id: post._id }).exec();
+
+      // Fetch the username for each comment using the 'user_id' in the Comment model
+      for (const comment of comments) {
+        const commentUser = await User.findById(comment.user_id).exec();
+        comment.username = commentUser.username; // Add the 'username' field to the comment
+        comment.profilePicture = commentUser.profilePicture; // Add the 'profilePicture' field to the comment
+      }
+
+      post.comments = comments;
+    }
+
+    // Render the 'homepage.ejs' template with the data
+    res.render('homepage', { currentUser: currentUser, posts: posts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server error');
+  }
+});
