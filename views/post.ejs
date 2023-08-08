@@ -49,9 +49,11 @@
     <div>
       <div class="post-garbage-section">
           <% if (post) { %>
-            <button class="post-garbage-button" onclick="deletePost('<%= post._id %>')" href="/homepage">
-              <i class="fas fa-trash"></i>
-            </button>
+            <% if (currentUser._id.toString() === post.user_id._id.toString()) { %>
+              <button class="post-garbage-button" onclick="deletePost('<%= post._id %>')" href="/homepage">
+                <i class="fas fa-trash"></i>
+              </button>
+            <% }; %>
           <% }; %>
       </div>
     </div>
@@ -201,18 +203,7 @@
         body: JSON.stringify({ post_id: post_id }),
       })
       .then((response) => response.json())
-      .then((data) => {
-          if (data.success) {
-            // If the post was successfully deleted, redirect to the homepage
-            window.location.href = '/homepage';
-          } else {
-            // Handle the case where the post could not be deleted
-            console.error('Error deleting post:', data.error);
-          }
-        })
-      .catch((error) => {
-          console.error('Error deleting post:', error);
-        });
+      window.location.href = '/homepage';
     }
   </script>
 </body>
